@@ -7,8 +7,8 @@
 <link name="base_link">
   <inertial>
     <origin xyz="-0.026500000000020115 0.1853149788824598 0.005671016395165651" rpy="0 0 0"/>
-    <mass value="1.6209524349173943"/>
-    <inertia ixx="0.007201" iyy="0.004781" izz="0.011973" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <mass value="2.06"/>
+    <inertia ixx="0.009141" iyy="0.006072" izz="0.015206" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -28,8 +28,8 @@
 <link name="tibia_1_link_1">
   <inertial>
     <origin xyz="0.00010740246556076305 -0.06266738282319978 3.191642993887996e-07" rpy="0 0 0"/>
-    <mass value="0.6509579807539126"/>
-    <inertia ixx="0.001806" iyy="0.000223" izz="0.001984" ixy="-1.6e-05" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.827"/>
+    <inertia ixx="0.002294" iyy="0.000283" izz="0.002521" ixy="-2.0e-05" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0265 0.0852 -0.000912" rpy="0 0 0"/>
@@ -49,8 +49,8 @@
 <link name="femur_1_link_1">
   <inertial>
     <origin xyz="0.0 -0.0477000000000007 3.1916430001611897e-07" rpy="0 0 0"/>
-    <mass value="1.2425883897057017"/>
-    <inertia ixx="0.001575" iyy="0.00032" izz="0.001691" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <mass value="1.578"/>
+    <inertia ixx="0.002000" iyy="0.000406" izz="0.002148" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0265 -0.0102 -0.000912" rpy="0 0 0"/>
@@ -70,8 +70,8 @@
 <link name="coxa_1_link_1">
   <inertial>
     <origin xyz="1.521040238205984e-13 -0.03676640708236653 -0.010119187749198146" rpy="0 0 0"/>
-    <mass value="0.36752045333400934"/>
-    <inertia ixx="0.000195" iyy="0.000135" izz="0.000292" ixy="-0.0" iyz="-2.8e-05" ixz="0.0"/>
+    <mass value="0.467"/>
+    <inertia ixx="0.000248" iyy="0.000172" izz="0.000371" ixy="-0.0" iyz="-3.6e-05" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0.0265 -0.0694 -0.013762" rpy="0 0 0"/>
@@ -528,5 +528,210 @@
   <child link="coxa_6_link_1"/>
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
+
+<!-- Transmissions for all joints -->
+<!-- Leg 1 Transmissions -->
+<transmission name="coxa_1_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="coxa_1_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="coxa_1_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="femur_1_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="femur_1_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="femur_1_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tibia_1_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tibia_1_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tibia_1_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- Leg 2 Transmissions -->
+<transmission name="coxa_2_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="coxa_2_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="coxa_2_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="femur_2_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="femur_2_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="femur_2_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tibia_2_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tibia_2_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tibia_2_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- Leg 3 Transmissions -->
+<transmission name="coxa_3_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="coxa_3_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="coxa_3_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="femur_3_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="femur_3_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="femur_3_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tibia_3_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tibia_3_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tibia_3_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- Leg 4 Transmissions -->
+<transmission name="coxa_4_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="coxa_4_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="coxa_4_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="femur_4_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="femur_4_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="femur_4_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tibia_4_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tibia_4_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tibia_4_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- Leg 5 Transmissions -->
+<transmission name="coxa_5_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="coxa_5_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="coxa_5_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="femur_5_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="femur_5_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="femur_5_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tibia_5_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tibia_5_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tibia_5_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- Leg 6 Transmissions -->
+<transmission name="coxa_6_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="coxa_6_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="coxa_6_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="femur_6_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="femur_6_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="femur_6_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tibia_6_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tibia_6_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tibia_6_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
 
 </robot>
