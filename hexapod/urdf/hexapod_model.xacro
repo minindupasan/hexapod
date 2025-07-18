@@ -403,14 +403,14 @@
   </collision>
 </link>
 
-<joint name="femur_1_joint" type="continuous">
+<joint name="tibia_1_joint" type="continuous">
   <origin xyz="0.0 -0.0954 0.0" rpy="0 0 0"/>
   <parent link="femur_1_link_1"/>
   <child link="tibia_1_link_1"/>
   <axis xyz="-1.0 0.0 -0.0"/>
 </joint>
 
-<joint name="tibia_1_joint" type="continuous">
+<joint name="femur_1_joint" type="continuous">
   <origin xyz="0.0 -0.0592 -0.01285" rpy="0 0 0"/>
   <parent link="coxa_1_link_1"/>
   <child link="femur_1_link_1"/>
@@ -424,14 +424,14 @@
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
-<joint name="femur_2_joint" type="continuous">
+<joint name="tibia_2_joint" type="continuous">
   <origin xyz="-0.067458 -0.067458 0.0" rpy="0 0 0"/>
   <parent link="femur_2_link_1"/>
   <child link="tibia_2_link_1"/>
   <axis xyz="-0.707107 0.707107 0.0"/>
 </joint>
 
-<joint name="tibia_2_joint" type="continuous">
+<joint name="femur_2_joint" type="continuous">
   <origin xyz="-0.041861 -0.041861 -0.01285" rpy="0 0 0"/>
   <parent link="coxa_2_link_1"/>
   <child link="femur_2_link_1"/>
@@ -445,14 +445,14 @@
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
-<joint name="femur_3_joint" type="continuous">
+<joint name="tibia_3_joint" type="continuous">
   <origin xyz="-0.067458 0.067458 0.0" rpy="0 0 0"/>
   <parent link="femur_3_link_1"/>
   <child link="tibia_3_link_1"/>
   <axis xyz="0.707107 0.707107 0.0"/>
 </joint>
 
-<joint name="tibia_3_joint" type="continuous">
+<joint name="femur_3_joint" type="continuous">
   <origin xyz="-0.041861 0.041861 -0.01285" rpy="0 0 0"/>
   <parent link="coxa_3_link_1"/>
   <child link="femur_3_link_1"/>
@@ -466,14 +466,14 @@
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
-<joint name="femur_4_joint" type="continuous">
+<joint name="tibia_4_joint" type="continuous">
   <origin xyz="0.0 0.0954 0.0" rpy="0 0 0"/>
   <parent link="femur_4_link_1"/>
   <child link="tibia_4_link_1"/>
   <axis xyz="1.0 -0.0 -0.0"/>
 </joint>
 
-<joint name="tibia_4_joint" type="continuous">
+<joint name="femur_4_joint" type="continuous">
   <origin xyz="0.0 0.0592 -0.01285" rpy="0 0 0"/>
   <parent link="coxa_4_link_1"/>
   <child link="femur_4_link_1"/>
@@ -487,14 +487,14 @@
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
-<joint name="femur_5_joint" type="continuous">
+<joint name="tibia_5_joint" type="continuous">
   <origin xyz="0.067458 0.067458 0.0" rpy="0 0 0"/>
   <parent link="femur_5_link_1"/>
   <child link="tibia_5_link_1"/>
   <axis xyz="0.707107 -0.707107 -0.0"/>
 </joint>
 
-<joint name="tibia_5_joint" type="continuous">
+<joint name="femur_5_joint" type="continuous">
   <origin xyz="0.041861 0.041861 -0.01285" rpy="0 0 0"/>
   <parent link="coxa_5_link_1"/>
   <child link="femur_5_link_1"/>
@@ -508,14 +508,14 @@
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
-<joint name="femur_6_joint" type="continuous">
+<joint name="tibia_6_joint" type="continuous">
   <origin xyz="0.067458 -0.067458 0.0" rpy="0 0 0"/>
   <parent link="femur_6_link_1"/>
   <child link="tibia_6_link_1"/>
   <axis xyz="-0.707107 -0.707107 -0.0"/>
 </joint>
 
-<joint name="tibia_6_joint" type="continuous">
+<joint name="femur_6_joint" type="continuous">
   <origin xyz="0.041861 -0.041861 -0.01285" rpy="0 0 0"/>
   <parent link="coxa_6_link_1"/>
   <child link="femur_6_link_1"/>
