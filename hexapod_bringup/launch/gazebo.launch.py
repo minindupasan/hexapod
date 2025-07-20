@@ -26,6 +26,9 @@ def generate_launch_description():
     controllers_config_path = os.path.join(hexapod_control_dir, 'config', 'hexapod_controllers.yaml')
     bridge_config_path = os.path.join(hexapod_description_dir, 'config', 'ros_gz_bridge_gazebo.yaml')
     
+    # Process the URDF once
+    robot_description_content = Command(['xacro ', urdf_path])
+    
     # Launch arguments
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
@@ -65,7 +68,7 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[{
-                'robot_description': Command(['xacro ', urdf_path]),
+                'robot_description': robot_description_content,
                 'use_sim_time': LaunchConfiguration('use_sim_time')
             }]
         ),
@@ -102,7 +105,7 @@ def generate_launch_description():
             name='controller_manager',
             output='screen',
             parameters=[
-                {'robot_description': Command(['xacro ', urdf_path])},
+                {'robot_description': robot_description_content},
                 controllers_config_path,
                 {'use_sim_time': LaunchConfiguration('use_sim_time')}
             ]
