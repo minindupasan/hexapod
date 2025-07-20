@@ -19,10 +19,10 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='author',
-    maintainer_email='todo@todo.com',
-    description='The ' + package_name + ' package',
-    license='TODO: License declaration',
+    maintainer='minindu',
+    maintainer_email='minindupasan@gmail.com',
+    description='Hexapod robot model description with URDF, meshes, and configuration files',
+    license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

@@ -196,9 +196,8 @@
 
     <!-- Gazebo Plugin for ROS2 Control -->
     <gazebo>
-        <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system.so">
-            <robotNamespace>/hexapod</robotNamespace>
-            <robotSimType>gazebo_ros2_control/GazeboSystem</robotSimType>
+        <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+            <parameters>/home/minindu/ros2_ws/src/hexapod_control/config/hexapod_controllers.yaml</parameters>
         </plugin>
     </gazebo>
 

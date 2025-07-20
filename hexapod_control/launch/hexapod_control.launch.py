@@ -9,7 +9,7 @@ def generate_launch_description():
     return LaunchDescription([
         # Launch Gazebo with hexapod
         ExecuteProcess(
-            cmd=['ros2', 'launch', 'hexapod_model_description', 'gazebo.launch.py'],
+            cmd=['ros2', 'launch', 'hexapod_bringup', 'gazebo.launch.py'],
             output='screen'
         ),
         

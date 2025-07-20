@@ -1,4 +1,8 @@
-<?xml version="1.0"?>
+<?x  <name>hexapod_control</name>
+  <version>0.0.0</version>
+  <description>Hexapod locomotion control package with walking gaits and joint controllers</description>
+  <maintainer email="minindupasan@gmail.com">minindu</maintainer>
+  <license>Apache-2.0</license>rsion="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>hexapod_control</name>
@@ -13,6 +17,9 @@
   <depend>geometry_msgs</depend>
   <depend>trajectory_msgs</depend>
   <depend>control_msgs</depend>
+  <depend>controller_manager</depend>
+  <depend>joint_state_broadcaster</depend>
+  <depend>position_controllers</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

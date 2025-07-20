@@ -1,4 +1,8 @@
-<?xml version="1.0"?>
+<?x  <name>hexapod_model_description</name>
+  <version>0.0.0</version>
+  <description>Hexapod robot model description with URDF, meshes, and configuration files</description>
+  <maintainer email="minindupasan@gmail.com">minindu</maintainer>
+  <license>Apache-2.0</license>rsion="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
 <name>hexapod_model_description</name>

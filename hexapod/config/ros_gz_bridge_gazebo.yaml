@@ -1,0 +1,52 @@
+# Bridge configuration for Gazebo-ROS2 communication
+# Format: ros_topic_name@ros_message_type[ignition_topic_name]
+
+# Joint states (from Gazebo to ROS2)
+/joint_states@sensor_msgs/msg/JointState[/joint_states]
+
+# Joint position commands (from ROS2 to Gazebo)
+/hexapod_position_controller/commands@std_msgs/msg/Float64MultiArray[/hexapod_position_controller/commands]
+
+# Individual joint position commands
+/coxa_1_position_controller/commands@std_msgs/msg/Float64MultiArray[/coxa_1_position_controller/commands]
+/femur_1_position_controller/commands@std_msgs/msg/Float64MultiArray[/femur_1_position_controller/commands]
+/tibia_1_position_controller/commands@std_msgs/msg/Float64MultiArray[/tibia_1_position_controller/commands]
+
+/coxa_2_position_controller/commands@std_msgs/msg/Float64MultiArray[/coxa_2_position_controller/commands]
+/femur_2_position_controller/commands@std_msgs/msg/Float64MultiArray[/femur_2_position_controller/commands]
+/tibia_2_position_controller/commands@std_msgs/msg/Float64MultiArray[/tibia_2_position_controller/commands]
+
+/coxa_3_position_controller/commands@std_msgs/msg/Float64MultiArray[/coxa_3_position_controller/commands]
+/femur_3_position_controller/commands@std_msgs/msg/Float64MultiArray[/femur_3_position_controller/commands]
+/tibia_3_position_controller/commands@std_msgs/msg/Float64MultiArray[/tibia_3_position_controller/commands]
+
+/coxa_4_position_controller/commands@std_msgs/msg/Float64MultiArray[/coxa_4_position_controller/commands]
+/femur_4_position_controller/commands@std_msgs/msg/Float64MultiArray[/femur_4_position_controller/commands]
+/tibia_4_position_controller/commands@std_msgs/msg/Float64MultiArray[/tibia_4_position_controller/commands]
+
+/coxa_5_position_controller/commands@std_msgs/msg/Float64MultiArray[/coxa_5_position_controller/commands]
+/femur_5_position_controller/commands@std_msgs/msg/Float64MultiArray[/femur_5_position_controller/commands]
+/tibia_5_position_controller/commands@std_msgs/msg/Float64MultiArray[/tibia_5_position_controller/commands]
+
+/coxa_6_position_controller/commands@std_msgs/msg/Float64MultiArray[/coxa_6_position_controller/commands]
+/femur_6_position_controller/commands@std_msgs/msg/Float64MultiArray[/femur_6_position_controller/commands]
+/tibia_6_position_controller/commands@std_msgs/msg/Float64MultiArray[/tibia_6_position_controller/commands]
+
+# Clock synchronization
+/clock@rosgraph_msgs/msg/Clock[/clock]
+
+# Transform data
+/tf@tf2_msgs/msg/TFMessage[/tf]
+/tf_static@tf2_msgs/msg/TFMessage[/tf_static]
+
+# Model state information
+/model/hexapod/pose@geometry_msgs/msg/Pose[/model/hexapod/pose]
+/model/hexapod/pose_static@geometry_msgs/msg/Pose[/model/hexapod/pose_static]
+
+# Contact sensors (for ground contact detection)
+/model/hexapod/link/tibia_1_link_1/sensor/contact_sensor/contact@gz.msgs.Contacts[/contact_sensor_tibia_1]
+/model/hexapod/link/tibia_2_link_1/sensor/contact_sensor/contact@gz.msgs.Contacts[/contact_sensor_tibia_2]
+/model/hexapod/link/tibia_3_link_1/sensor/contact_sensor/contact@gz.msgs.Contacts[/contact_sensor_tibia_3]
+/model/hexapod/link/tibia_4_link_1/sensor/contact_sensor/contact@gz.msgs.Contacts[/contact_sensor_tibia_4]
+/model/hexapod/link/tibia_5_link_1/sensor/contact_sensor/contact@gz.msgs.Contacts[/contact_sensor_tibia_5]
+/model/hexapod/link/tibia_6_link_1/sensor/contact_sensor/contact@gz.msgs.Contacts[/contact_sensor_tibia_6]
