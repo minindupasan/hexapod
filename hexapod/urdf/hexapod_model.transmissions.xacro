@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    
+    <!-- Transmission Macros -->
+    <xacro:macro name="gazebo_transmission" params="name">
+        <transmission name="${name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <xacro:macro name="hexapod_transmissions" params="prefix">
+        <!-- Leg 1 transmissions -->
+        <xacro:gazebo_transmission name="${prefix}coxa_1_joint"/>
+        <xacro:gazebo_transmission name="${prefix}femur_1_joint"/>
+        <xacro:gazebo_transmission name="${prefix}tibia_1_joint"/>
+        
+        <!-- Leg 2 transmissions -->
+        <xacro:gazebo_transmission name="${prefix}coxa_2_joint"/>
+        <xacro:gazebo_transmission name="${prefix}femur_2_joint"/>
+        <xacro:gazebo_transmission name="${prefix}tibia_2_joint"/>
+        
+        <!-- Leg 3 transmissions -->
+        <xacro:gazebo_transmission name="${prefix}coxa_3_joint"/>
+        <xacro:gazebo_transmission name="${prefix}femur_3_joint"/>
+        <xacro:gazebo_transmission name="${prefix}tibia_3_joint"/>
+        
+        <!-- Leg 4 transmissions -->
+        <xacro:gazebo_transmission name="${prefix}coxa_4_joint"/>
+        <xacro:gazebo_transmission name="${prefix}femur_4_joint"/>
+        <xacro:gazebo_transmission name="${prefix}tibia_4_joint"/>
+        
+        <!-- Leg 5 transmissions -->
+        <xacro:gazebo_transmission name="${prefix}coxa_5_joint"/>
+        <xacro:gazebo_transmission name="${prefix}femur_5_joint"/>
+        <xacro:gazebo_transmission name="${prefix}tibia_5_joint"/>
+        
+        <!-- Leg 6 transmissions -->
+        <xacro:gazebo_transmission name="${prefix}coxa_6_joint"/>
+        <xacro:gazebo_transmission name="${prefix}femur_6_joint"/>
+        <xacro:gazebo_transmission name="${prefix}tibia_6_joint"/>
+    </xacro:macro>
+
+</robot>
