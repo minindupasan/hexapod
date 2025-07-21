@@ -1,12 +1,11 @@
 <?xml version="1.0" ?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-    
+<robot name="hexapod" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
     <!-- Gazebo ros2_control plugin -->
     <gazebo>
         <plugin name="gz_ros2_control" filename="libgz_ros2_control-system.so">
             <robot_param>robot_description</robot_param>
             <robot_param_node>robot_state_publisher</robot_param_node>
-            <parameters>$(find hexapod_control)/config/hexapod_controllers.yaml</parameters>
         </plugin>
     </gazebo>
 
@@ -55,8 +54,9 @@
     <ros2_control name="hexapod_control" type="system">
         <hardware>
             <plugin>gz_ros2_control/GzSystem</plugin>
+            <param name="update_rate">100</param>
         </hardware>
-        
+
         <!-- Joint interfaces for all legs -->
         <xacro:macro name="leg_joint_interfaces" params="leg_num">
             <joint name="coxa_${leg_num}_joint">

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Macro to avoid repetition -->
+  <xacro:macro name="leg_transmissions" params="leg_num">
+    <!-- Coxa -->
+    <transmission name="coxa_${leg_num}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="coxa_${leg_num}_joint">
+        <hardwareInterface>hardware_interface/position</hardwareInterface>
+      </joint>
+      <actuator name="coxa_${leg_num}_motor">
+        <hardwareInterface>hardware_interface/position</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <!-- Femur -->
+    <transmission name="femur_${leg_num}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="femur_${leg_num}_joint">
+        <hardwareInterface>hardware_interface/position</hardwareInterface>
+      </joint>
+      <actuator name="femur_${leg_num}_motor">
+        <hardwareInterface>hardware_interface/position</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <!-- Tibia -->
+    <transmission name="tibia_${leg_num}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="tibia_${leg_num}_joint">
+        <hardwareInterface>hardware_interface/position</hardwareInterface>
+      </joint>
+      <actuator name="tibia_${leg_num}_motor">
+        <hardwareInterface>hardware_interface/position</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- Apply macro to all six legs -->
+  <xacro:leg_transmissions leg_num="1" />
+  <xacro:leg_transmissions leg_num="2" />
+  <xacro:leg_transmissions leg_num="3" />
+  <xacro:leg_transmissions leg_num="4" />
+  <xacro:leg_transmissions leg_num="5" />
+  <xacro:leg_transmissions leg_num="6" />
+
+</robot>
