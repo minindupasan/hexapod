@@ -26,6 +26,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'hexapod_walker.py = hexapod_model_description.hexapod_walker:main',
         ],
     },
 )

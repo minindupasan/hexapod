@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- Macro to avoid repetition -->
+  <!-- Macro to define transmissions for a leg -->
   <xacro:macro name="leg_transmissions" params="leg_num">
     <!-- Coxa -->
     <transmission name="coxa_${leg_num}_transmission">
@@ -40,12 +40,12 @@
     </transmission>
   </xacro:macro>
 
-  <!-- Apply macro to all six legs -->
-  <xacro:leg_transmissions leg_num="1" />
-  <xacro:leg_transmissions leg_num="2" />
-  <xacro:leg_transmissions leg_num="3" />
-  <xacro:leg_transmissions leg_num="4" />
-  <xacro:leg_transmissions leg_num="5" />
-  <xacro:leg_transmissions leg_num="6" />
+  <!-- Call macro for all 6 legs -->
+  <xacro:leg_transmissions leg_num="1"/>
+  <xacro:leg_transmissions leg_num="2"/>
+  <xacro:leg_transmissions leg_num="3"/>
+  <xacro:leg_transmissions leg_num="4"/>
+  <xacro:leg_transmissions leg_num="5"/>
+  <xacro:leg_transmissions leg_num="6"/>
 
 </robot>

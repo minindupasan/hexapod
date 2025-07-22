@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Gazebo ROS 2 Control Plugin for new Gazebo (Garden/Harmonic) -->
+  <gazebo>
+    <plugin name="gz_ros2_control" filename="libgz_ros2_control-system.so">
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+      <parameters>$(find hexapod_control)/config/hexapod_controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Macro to define friction and contact parameters for each link -->
+  <xacro:macro name="gazebo_link" params="link_name">
+    <gazebo reference="${link_name}">
+      <mu1>1.0</mu1> <!-- Static friction -->
+      <mu2>1.0</mu2> <!-- Kinetic friction -->
+      <kp>100000.0</kp> <!-- Contact stiffness -->
+      <kd>1.0</kd> <!-- Contact damping -->
+      <minDepth>0.001</minDepth> <!-- Contact penetration depth -->
+      <maxVel>0.01</maxVel> <!-- Max contact velocity -->
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Apply settings to all links individually -->
+  <xacro:gazebo_link link_name="base_link"/>
+  <xacro:gazebo_link link_name="coxa_1"/>
+  <xacro:gazebo_link link_name="femur_1"/>
+  <xacro:gazebo_link link_name="tibia_1"/>
+  <xacro:gazebo_link link_name="coxa_2"/>
+  <xacro:gazebo_link link_name="femur_2"/>
+  <xacro:gazebo_link link_name="tibia_2"/>
+  <xacro:gazebo_link link_name="coxa_3"/>
+  <xacro:gazebo_link link_name="femur_3"/>
+  <xacro:gazebo_link link_name="tibia_3"/>
+  <xacro:gazebo_link link_name="coxa_4"/>
+  <xacro:gazebo_link link_name="femur_4"/>
+  <xacro:gazebo_link link_name="tibia_4"/>
+  <xacro:gazebo_link link_name="coxa_5"/>
+  <xacro:gazebo_link link_name="femur_5"/>
+  <xacro:gazebo_link link_name="tibia_5"/>
+  <xacro:gazebo_link link_name="coxa_6"/>
+  <xacro:gazebo_link link_name="femur_6"/>
+  <xacro:gazebo_link link_name="tibia_6"/>
+
+</robot>

@@ -1,26 +1,126 @@
-# Bridge configuration for Gazebo-ROS2 communication
-# Each entry defines a topic bridge between ROS2 and Gazebo
-
-- ros_topic_name: /joint_states
-  gz_topic_name: /joint_states
-  ros_type_name: sensor_msgs/msg/JointState
-  gz_type_name: gz.msgs.Model
+# Bridge configuration for ROS 2 and Gazebo Garden/Harmonic
+- ros_topic_name: "clock"
+  gz_topic_name: "clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
   direction: GZ_TO_ROS
 
-- ros_topic_name: /hexapod_position_controller/commands
-  gz_topic_name: /hexapod_position_controller/commands
-  ros_type_name: std_msgs/msg/Float64MultiArray
-  gz_type_name: gz.msgs.Double_V
+- ros_topic_name: "joint_states"
+  gz_topic_name: "joint_states"
+  ros_type_name: "sensor_msgs/msg/JointState"
+  gz_type_name: "gz.msgs.Model"
+  direction: GZ_TO_ROS
+
+# Bridge for all joint commands - Leg 1
+- ros_topic_name: "/coxa_1_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/coxa_1_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: /clock
-  gz_topic_name: /clock
-  ros_type_name: rosgraph_msgs/msg/Clock
-  gz_type_name: gz.msgs.Clock
-  direction: GZ_TO_ROS
+- ros_topic_name: "/femur_1_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/femur_1_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
 
-- ros_topic_name: /tf
-  gz_topic_name: /tf
-  ros_type_name: tf2_msgs/msg/TFMessage
-  gz_type_name: gz.msgs.Pose_V
-  direction: GZ_TO_ROS
+- ros_topic_name: "/tibia_1_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/tibia_1_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Bridge for all joint commands - Leg 2
+- ros_topic_name: "/coxa_2_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/coxa_2_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/femur_2_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/femur_2_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/tibia_2_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/tibia_2_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Bridge for all joint commands - Leg 3
+- ros_topic_name: "/coxa_3_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/coxa_3_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/femur_3_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/femur_3_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/tibia_3_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/tibia_3_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Bridge for all joint commands - Leg 4
+- ros_topic_name: "/coxa_4_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/coxa_4_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/femur_4_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/femur_4_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/tibia_4_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/tibia_4_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Bridge for all joint commands - Leg 5
+- ros_topic_name: "/coxa_5_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/coxa_5_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/femur_5_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/femur_5_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/tibia_5_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/tibia_5_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Bridge for all joint commands - Leg 6
+- ros_topic_name: "/coxa_6_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/coxa_6_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/femur_6_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/femur_6_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/tibia_6_position_controller/command"
+  gz_topic_name: "/model/hexapod/joint/tibia_6_joint/cmd_pos"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
