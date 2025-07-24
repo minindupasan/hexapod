@@ -1,0 +1,103 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    leg1_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    leg2_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    leg3_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    leg4_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    leg5_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    leg6_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+# Individual leg controller configurations
+leg1_controller:
+  ros__parameters:
+    joints:
+      - coxa_1_joint
+      - femur_1_joint
+      - tibia_1_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+
+leg2_controller:
+  ros__parameters:
+    joints:
+      - coxa_2_joint
+      - femur_2_joint
+      - tibia_2_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+
+leg3_controller:
+  ros__parameters:
+    joints:
+      - coxa_3_joint
+      - femur_3_joint
+      - tibia_3_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+
+leg4_controller:
+  ros__parameters:
+    joints:
+      - coxa_4_joint
+      - femur_4_joint
+      - tibia_4_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+
+leg5_controller:
+  ros__parameters:
+    joints:
+      - coxa_5_joint
+      - femur_5_joint
+      - tibia_5_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+
+leg6_controller:
+  ros__parameters:
+    joints:
+      - coxa_6_joint
+      - femur_6_joint
+      - tibia_6_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
