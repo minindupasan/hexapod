@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'rotation = hexapod_control.rotation:main',
+            'hexapod_teleop= hexapod_control.hexapod_teleop:main',
         ],
     },
 )

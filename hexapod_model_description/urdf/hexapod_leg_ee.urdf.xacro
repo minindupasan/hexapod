@@ -68,209 +68,210 @@ Structure:
     <!-- LEG 1                                      -->
     <!-- ========================================== -->
     
-    <!-- Joint positions and orientations -->
-    <xacro:property name="coxa_joint_1_xyz" value="-0.0265 0.0694 0.013762"/>
+        <xacro:property name="coxa_joint_1_xyz" value="-0.107782 0.103068 0.013762"/>
     <xacro:property name="coxa_joint_1_axis" value="0.0 0.0 1.0"/>
-    <xacro:property name="femur_joint_1_xyz" value="0.0 -0.0592 -0.01285"/>
-    <xacro:property name="femur_joint_1_axis" value="-1.0 0.0 -0.0"/>
-    <xacro:property name="tibia_joint_1_xyz" value="0.0 -0.0954 0.0"/>
-    <xacro:property name="tibia_joint_1_axis" value="-1.0 0.0 -0.0"/>
+    <xacro:property name="femur_joint_1_xyz" value="-0.041861 -0.041861 -0.01285"/>
+    <xacro:property name="femur_joint_1_axis" value="-0.707107 0.707107 0.0"/>
+    <xacro:property name="tibia_joint_1_xyz" value="-0.067458 -0.067458 0.0"/>
+    <xacro:property name="tibia_joint_1_axis" value="-0.707107 0.707107 0.0"/>
 
     <!-- Link visual origins and orientations -->
-    <xacro:property name="coxa_1_c_xyz" value="0.0265 -0.0694 -0.013762"/>
+    <xacro:property name="coxa_1_c_xyz" value="0.107782 -0.103068 -0.013762"/>
     <xacro:property name="coxa_1_c_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_1_v_xyz" value="0.0265 -0.0694 -0.013762"/>
+    <xacro:property name="coxa_1_v_xyz" value="0.107782 -0.103068 -0.013762"/>
     <xacro:property name="coxa_1_v_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_1_i_xyz" value="1.521040238205984e-13 -0.03676640708236653 -0.010119187749198146"/>
+    <xacro:property name="coxa_1_i_xyz" value="-0.02599770016394727 -0.025997700307203414 -0.010119187749198275"/>
     <xacro:property name="coxa_1_i_rpy" value="0 0 0"/>
-    <xacro:property name="femur_1_c_xyz" value="0.0265 -0.0102 -0.000912"/>
+    <xacro:property name="femur_1_c_xyz" value="0.149643 -0.061207 -0.000912"/>
     <xacro:property name="femur_1_c_rpy" value="0 0 0"/>
-    <xacro:property name="femur_1_v_xyz" value="0.0265 -0.0102 -0.000912"/>
+    <xacro:property name="femur_1_v_xyz" value="0.149643 -0.061207 -0.000912"/>
     <xacro:property name="femur_1_v_rpy" value="0 0 0"/>
-    <xacro:property name="femur_1_i_xyz" value="0.0 -0.0477000000000007 3.1916430001611897e-07"/>
+    <xacro:property name="femur_1_i_xyz" value="-0.03372863930509079 -0.03372863944813179 3.191642998237815e-07"/>
     <xacro:property name="femur_1_i_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_1_c_xyz" value="0.0265 0.0852 -0.000912"/>
+    <xacro:property name="tibia_1_c_xyz" value="0.217101 0.006251 -0.000912"/>
     <xacro:property name="tibia_1_c_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_1_v_xyz" value="0.0265 0.0852 -0.000912"/>
+    <xacro:property name="tibia_1_v_xyz" value="0.217101 0.006251 -0.000912"/>
     <xacro:property name="tibia_1_v_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_1_i_xyz" value="0.00010740246556076305 -0.06266738282319978 3.191642993887996e-07"/>
+    <xacro:property name="tibia_1_i_xyz" value="-0.0442362191094724 -0.04438810927594172 3.1916429906462315e-07"/>
     <xacro:property name="tibia_1_i_rpy" value="0 0 0"/>
 
-    <!-- Inertial properties for leg 1 links -->
-    <xacro:property name="coxa_1_ixx" value="0.000195"/>
-    <xacro:property name="coxa_1_ixy" value="-0.0"/>
-    <xacro:property name="coxa_1_ixz" value="0.0"/>
-    <xacro:property name="coxa_1_iyy" value="0.000135"/>
-    <xacro:property name="coxa_1_iyz" value="-2.8e-05"/>
-    <xacro:property name="coxa_1_izz" value="0.000292"/>
+    <xacro:property name="coxa_1_ixx" value="0.000165"/>
+    <xacro:property name="coxa_1_ixy" value="-3e-05"/>
+    <xacro:property name="coxa_1_ixz" value="-2e-05"/>
+    <xacro:property name="coxa_1_iyy" value="0.000165"/>
+    <xacro:property name="coxa_1_iyz" value="-2e-05"/>
+    <xacro:property name="coxa_1_izz" value="0.000292"/>   
 
-    <xacro:property name="femur_1_ixx" value="0.001575"/>
-    <xacro:property name="femur_1_ixy" value="0.0"/>
-    <xacro:property name="femur_1_ixz" value="0.0"/>
-    <xacro:property name="femur_1_iyy" value="0.00032"/>
+    <xacro:property name="femur_1_ixx" value="0.000947"/>
+    <xacro:property name="femur_1_ixy" value="-0.000627"/>
+    <xacro:property name="femur_1_ixz" value="-0.0"/>
+    <xacro:property name="femur_1_iyy" value="0.000947"/>
     <xacro:property name="femur_1_iyz" value="-0.0"/>
     <xacro:property name="femur_1_izz" value="0.001691"/>
 
-    <xacro:property name="tibia_1_ixx" value="0.001806"/>
-    <xacro:property name="tibia_1_ixy" value="-1.6e-05"/>
+    <xacro:property name="tibia_1_ixx" value="0.000998"/>
+    <xacro:property name="tibia_1_ixy" value="-0.000792"/>
     <xacro:property name="tibia_1_ixz" value="-0.0"/>
-    <xacro:property name="tibia_1_iyy" value="0.000223"/>
+    <xacro:property name="tibia_1_iyy" value="0.00103"/>
     <xacro:property name="tibia_1_iyz" value="-0.0"/>
     <xacro:property name="tibia_1_izz" value="0.001984"/>
-
+    
     <!-- ========================================== -->
     <!-- LEG 2 - FRONT MIDDLE                      -->
     <!-- ========================================== -->
-    
-    <xacro:property name="coxa_joint_2_xyz" value="-0.107782 0.103068 0.013762"/>
+
+    <!-- Joint positions and orientations -->
+    <xacro:property name="coxa_joint_2_xyz" value="-0.0265 0.0694 0.013762"/>
     <xacro:property name="coxa_joint_2_axis" value="0.0 0.0 1.0"/>
-    <xacro:property name="femur_joint_2_xyz" value="-0.041861 -0.041861 -0.01285"/>
-    <xacro:property name="femur_joint_2_axis" value="-0.707107 0.707107 0.0"/>
-    <xacro:property name="tibia_joint_2_xyz" value="-0.067458 -0.067458 0.0"/>
-    <xacro:property name="tibia_joint_2_axis" value="-0.707107 0.707107 0.0"/>
+    <xacro:property name="femur_joint_2_xyz" value="0.0 -0.0592 -0.01285"/>
+    <xacro:property name="femur_joint_2_axis" value="-1.0 0.0 -0.0"/>
+    <xacro:property name="tibia_joint_2_xyz" value="0.0 -0.0954 0.0"/>
+    <xacro:property name="tibia_joint_2_axis" value="-1.0 0.0 -0.0"/>
 
     <!-- Link visual origins and orientations -->
-    <xacro:property name="coxa_2_c_xyz" value="0.107782 -0.103068 -0.013762"/>
+    <xacro:property name="coxa_2_c_xyz" value="0.0265 -0.0694 -0.013762"/>
     <xacro:property name="coxa_2_c_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_2_v_xyz" value="0.107782 -0.103068 -0.013762"/>
+    <xacro:property name="coxa_2_v_xyz" value="0.0265 -0.0694 -0.013762"/>
     <xacro:property name="coxa_2_v_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_2_i_xyz" value="-0.02599770016394727 -0.025997700307203414 -0.010119187749198275"/>
+    <xacro:property name="coxa_2_i_xyz" value="1.521040238205984e-13 -0.03676640708236653 -0.010119187749198146"/>
     <xacro:property name="coxa_2_i_rpy" value="0 0 0"/>
-    <xacro:property name="femur_2_c_xyz" value="0.149643 -0.061207 -0.000912"/>
+    <xacro:property name="femur_2_c_xyz" value="0.0265 -0.0102 -0.000912"/>
     <xacro:property name="femur_2_c_rpy" value="0 0 0"/>
-    <xacro:property name="femur_2_v_xyz" value="0.149643 -0.061207 -0.000912"/>
+    <xacro:property name="femur_2_v_xyz" value="0.0265 -0.0102 -0.000912"/>
     <xacro:property name="femur_2_v_rpy" value="0 0 0"/>
-    <xacro:property name="femur_2_i_xyz" value="-0.03372863930509079 -0.03372863944813179 3.191642998237815e-07"/>
+    <xacro:property name="femur_2_i_xyz" value="0.0 -0.0477000000000007 3.1916430001611897e-07"/>
     <xacro:property name="femur_2_i_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_2_c_xyz" value="0.217101 0.006251 -0.000912"/>
+    <xacro:property name="tibia_2_c_xyz" value="0.0265 0.0852 -0.000912"/>
     <xacro:property name="tibia_2_c_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_2_v_xyz" value="0.217101 0.006251 -0.000912"/>
+    <xacro:property name="tibia_2_v_xyz" value="0.0265 0.0852 -0.000912"/>
     <xacro:property name="tibia_2_v_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_2_i_xyz" value="-0.0442362191094724 -0.04438810927594172 3.1916429906462315e-07"/>
+    <xacro:property name="tibia_2_i_xyz" value="0.00010740246556076305 -0.06266738282319978 3.191642993887996e-07"/>
     <xacro:property name="tibia_2_i_rpy" value="0 0 0"/>
 
-    <xacro:property name="coxa_2_ixx" value="0.000165"/>
-    <xacro:property name="coxa_2_ixy" value="-3e-05"/>
-    <xacro:property name="coxa_2_ixz" value="-2e-05"/>
-    <xacro:property name="coxa_2_iyy" value="0.000165"/>
-    <xacro:property name="coxa_2_iyz" value="-2e-05"/>
-    <xacro:property name="coxa_2_izz" value="0.000292"/>   
+    <!-- Inertial properties for leg 1 links -->
+    <xacro:property name="coxa_2_ixx" value="0.000195"/>
+    <xacro:property name="coxa_2_ixy" value="-0.0"/>
+    <xacro:property name="coxa_2_ixz" value="0.0"/>
+    <xacro:property name="coxa_2_iyy" value="0.000135"/>
+    <xacro:property name="coxa_2_iyz" value="-2.8e-05"/>
+    <xacro:property name="coxa_2_izz" value="0.000292"/>
 
-    <xacro:property name="femur_2_ixx" value="0.000947"/>
-    <xacro:property name="femur_2_ixy" value="-0.000627"/>
-    <xacro:property name="femur_2_ixz" value="-0.0"/>
-    <xacro:property name="femur_2_iyy" value="0.000947"/>
+    <xacro:property name="femur_2_ixx" value="0.001575"/>
+    <xacro:property name="femur_2_ixy" value="0.0"/>
+    <xacro:property name="femur_2_ixz" value="0.0"/>
+    <xacro:property name="femur_2_iyy" value="0.00032"/>
     <xacro:property name="femur_2_iyz" value="-0.0"/>
     <xacro:property name="femur_2_izz" value="0.001691"/>
 
-    <xacro:property name="tibia_2_ixx" value="0.000998"/>
-    <xacro:property name="tibia_2_ixy" value="-0.000792"/>
+    <xacro:property name="tibia_2_ixx" value="0.001806"/>
+    <xacro:property name="tibia_2_ixy" value="-1.6e-05"/>
     <xacro:property name="tibia_2_ixz" value="-0.0"/>
-    <xacro:property name="tibia_2_iyy" value="0.00103"/>
+    <xacro:property name="tibia_2_iyy" value="0.000223"/>
     <xacro:property name="tibia_2_iyz" value="-0.0"/>
     <xacro:property name="tibia_2_izz" value="0.001984"/>
     
     <!-- ========================================== -->
     <!-- LEG 3 - FRONT LEFT                        -->
     <!-- ========================================== -->
-    
-    <xacro:property name="coxa_joint_3_xyz" value="-0.107782 0.265632 0.013762"/>
+        
+    <xacro:property name="coxa_joint_3_xyz" value="0.054782 0.103068 0.013762"/>
     <xacro:property name="coxa_joint_3_axis" value="0.0 0.0 1.0"/>
-    <xacro:property name="femur_joint_3_xyz" value="-0.041861 0.041861 -0.01285"/>
-    <xacro:property name="femur_joint_3_axis" value="0.707107 0.707107 0.0"/>
-    <xacro:property name="tibia_joint_3_xyz" value="-0.067458 0.067458 0.0"/>
-    <xacro:property name="tibia_joint_3_axis" value="0.707107 0.707107 0.0"/>  
+    <xacro:property name="femur_joint_3_xyz" value="0.041861 -0.041861 -0.01285"/>
+    <xacro:property name="femur_joint_3_axis" value="-0.707107 -0.707107 0.0"/>
+    <xacro:property name="tibia_joint_3_xyz" value="0.067458 -0.067458 0.0"/>
+    <xacro:property name="tibia_joint_3_axis" value="-0.707107 -0.707107 -0.0"/>
 
     <!-- Link visual origins and orientations -->
-    <xacro:property name="coxa_3_c_xyz" value="0.107782 -0.265632 -0.013762"/>
+    <xacro:property name="coxa_3_c_xyz" value="-0.054782 -0.103068 -0.013762"/>
     <xacro:property name="coxa_3_c_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_3_v_xyz" value="0.107782 -0.265632 -0.013762"/>
+    <xacro:property name="coxa_3_v_xyz" value="-0.054782 -0.103068 -0.013762"/>
     <xacro:property name="coxa_3_v_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_3_i_xyz" value="-0.0259977001641626 0.02599770002090629 -0.010119187749198146"/>
+    <xacro:property name="coxa_3_i_xyz" value="0.025997700164162404 -0.02599770030698831 -0.010119187749198275"/>
     <xacro:property name="coxa_3_i_rpy" value="0 0 0"/>
-    <xacro:property name="femur_3_c_xyz" value="0.149643 -0.307493 -0.000912"/>
+    <xacro:property name="femur_3_c_xyz" value="-0.096643 -0.061207 -0.000912"/>
     <xacro:property name="femur_3_c_rpy" value="0 0 0"/>
-    <xacro:property name="femur_3_v_xyz" value="0.149643 -0.307493 -0.000912"/>
+    <xacro:property name="femur_3_v_xyz" value="-0.096643 -0.061207 -0.000912"/>
     <xacro:property name="femur_3_v_rpy" value="0 0 0"/>
-    <xacro:property name="femur_3_i_xyz" value="-0.03372863930509107 0.03372863916204971 3.1916430001611897e-07"/>
+    <xacro:property name="femur_3_i_xyz" value="0.03372863930509079 -0.0337286394481318 3.1916429977672713e-07"/>
     <xacro:property name="femur_3_i_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_3_c_xyz" value="0.217101 -0.374951 -0.000912"/>
+    <xacro:property name="tibia_3_c_xyz" value="-0.164101 0.006251 -0.000912"/>
     <xacro:property name="tibia_3_c_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_3_v_xyz" value="0.217101 -0.374951 -0.000912"/>
+    <xacro:property name="tibia_3_v_xyz" value="-0.164101 0.006251 -0.000912"/>
     <xacro:property name="tibia_3_v_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_3_i_xyz" value="-0.04438810913290109 0.04423621896643121 3.191642993887996e-07"/>
+    <xacro:property name="tibia_3_i_xyz" value="0.0443881091329007 -0.04423621925251339 3.1916429900401624e-07"/>
     <xacro:property name="tibia_3_i_rpy" value="0 0 0"/>
 
     <xacro:property name="coxa_3_ixx" value="0.000165"/>
     <xacro:property name="coxa_3_ixy" value="3e-05"/>
-    <xacro:property name="coxa_3_ixz" value="-2e-05"/>
+    <xacro:property name="coxa_3_ixz" value="2e-05"/>
     <xacro:property name="coxa_3_iyy" value="0.000165"/>
-    <xacro:property name="coxa_3_iyz" value="2e-05"/>
-    <xacro:property name="coxa_3_izz" value="0.000292"/>   
-    
+    <xacro:property name="coxa_3_iyz" value="-2e-05"/>
+    <xacro:property name="coxa_3_izz" value="0.000292"/>
+
     <xacro:property name="femur_3_ixx" value="0.000947"/>
     <xacro:property name="femur_3_ixy" value="0.000627"/>
-    <xacro:property name="femur_3_ixz" value="-0.0"/>
+    <xacro:property name="femur_3_ixz" value="0.0"/>
     <xacro:property name="femur_3_iyy" value="0.000947"/>
-    <xacro:property name="femur_3_iyz" value="0.0"/>
+    <xacro:property name="femur_3_iyz" value="-0.0"/>
     <xacro:property name="femur_3_izz" value="0.001691"/>
 
     <xacro:property name="tibia_3_ixx" value="0.00103"/>
     <xacro:property name="tibia_3_ixy" value="0.000792"/>
-    <xacro:property name="tibia_3_ixz" value="-0.0"/>
+    <xacro:property name="tibia_3_ixz" value="0.0"/>
     <xacro:property name="tibia_3_iyy" value="0.000998"/>
-    <xacro:property name="tibia_3_iyz" value="0.0"/>
+    <xacro:property name="tibia_3_iyz" value="-0.0"/>
     <xacro:property name="tibia_3_izz" value="0.001984"/>
+    
 
     <!-- ========================================== -->
     <!-- LEG 4 - REAR LEFT                         -->
     <!-- ========================================== -->
     
-    <xacro:property name="coxa_joint_4_xyz" value="-0.0265 0.2993 0.013762"/>
+    <xacro:property name="coxa_joint_4_xyz" value="-0.107782 0.265632 0.013762"/>
     <xacro:property name="coxa_joint_4_axis" value="0.0 0.0 1.0"/>
-    <xacro:property name="femur_joint_4_xyz" value="0.0 0.0592 -0.01285"/>
-    <xacro:property name="femur_joint_4_axis" value="1.0 -0.0 0.0"/>
-    <xacro:property name="tibia_joint_4_xyz" value="0.0 0.0954 0.0"/>
-    <xacro:property name="tibia_joint_4_axis" value="1.0 -0.0 -0.0"/>
+    <xacro:property name="femur_joint_4_xyz" value="-0.041861 0.041861 -0.01285"/>
+    <xacro:property name="femur_joint_4_axis" value="0.707107 0.707107 0.0"/>
+    <xacro:property name="tibia_joint_4_xyz" value="-0.067458 0.067458 0.0"/>
+    <xacro:property name="tibia_joint_4_axis" value="0.707107 0.707107 0.0"/>  
 
     <!-- Link visual origins and orientations -->
-    <xacro:property name="coxa_4_c_xyz" value="0.0265 -0.2993 -0.013762"/>
+    <xacro:property name="coxa_4_c_xyz" value="0.107782 -0.265632 -0.013762"/>
     <xacro:property name="coxa_4_c_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_4_v_xyz" value="0.0265 -0.2993 -0.013762"/>
+    <xacro:property name="coxa_4_v_xyz" value="0.107782 -0.265632 -0.013762"/>
     <xacro:property name="coxa_4_v_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_4_i_xyz" value="-1.5211790160840621e-13 0.03676640679628457 -0.010119187749198275"/>
+    <xacro:property name="coxa_4_i_xyz" value="-0.0259977001641626 0.02599770002090629 -0.010119187749198146"/>
     <xacro:property name="coxa_4_i_rpy" value="0 0 0"/>
-    <xacro:property name="femur_4_c_xyz" value="0.0265 -0.3585 -0.000912"/>
+    <xacro:property name="femur_4_c_xyz" value="0.149643 -0.307493 -0.000912"/>
     <xacro:property name="femur_4_c_rpy" value="0 0 0"/>
-    <xacro:property name="femur_4_v_xyz" value="0.0265 -0.3585 -0.000912"/>
+    <xacro:property name="femur_4_v_xyz" value="0.149643 -0.307493 -0.000912"/>
     <xacro:property name="femur_4_v_rpy" value="0 0 0"/>
-    <xacro:property name="femur_4_i_xyz" value="-3.469446951953614e-18 0.047699999713918695 3.191642998002543e-07"/>
+    <xacro:property name="femur_4_i_xyz" value="-0.03372863930509107 0.03372863916204971 3.1916430001611897e-07"/>
     <xacro:property name="femur_4_i_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_4_c_xyz" value="0.0265 -0.4539 -0.000912"/>
+    <xacro:property name="tibia_4_c_xyz" value="0.217101 -0.374951 -0.000912"/>
     <xacro:property name="tibia_4_c_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_4_v_xyz" value="0.0265 -0.4539 -0.000912"/>
+    <xacro:property name="tibia_4_v_xyz" value="0.217101 -0.374951 -0.000912"/>
     <xacro:property name="tibia_4_v_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_4_i_xyz" value="-0.00010740246556075264 0.06266738253711773 3.191642990343739e-07"/>
+    <xacro:property name="tibia_4_i_xyz" value="-0.04438810913290109 0.04423621896643121 3.191642993887996e-07"/>
     <xacro:property name="tibia_4_i_rpy" value="0 0 0"/>
 
-    <xacro:property name="coxa_4_ixx" value="0.000195"/>
-    <xacro:property name="coxa_4_ixy" value="-0.0"/>
-    <xacro:property name="coxa_4_ixz" value="-0.0"/>
-    <xacro:property name="coxa_4_iyy" value="0.000135"/>
-    <xacro:property name="coxa_4_iyz" value="2.8e-05"/>
-    <xacro:property name="coxa_4_izz" value="0.000292"/> 
-
-    <xacro:property name="femur_4_ixx" value="0.001575"/>
-    <xacro:property name="femur_4_ixy" value="0.0"/>
+    <xacro:property name="coxa_4_ixx" value="0.000165"/>
+    <xacro:property name="coxa_4_ixy" value="3e-05"/>
+    <xacro:property name="coxa_4_ixz" value="-2e-05"/>
+    <xacro:property name="coxa_4_iyy" value="0.000165"/>
+    <xacro:property name="coxa_4_iyz" value="2e-05"/>
+    <xacro:property name="coxa_4_izz" value="0.000292"/>   
+    
+    <xacro:property name="femur_4_ixx" value="0.000947"/>
+    <xacro:property name="femur_4_ixy" value="0.000627"/>
     <xacro:property name="femur_4_ixz" value="-0.0"/>
-    <xacro:property name="femur_4_iyy" value="0.00032"/>
+    <xacro:property name="femur_4_iyy" value="0.000947"/>
     <xacro:property name="femur_4_iyz" value="0.0"/>
     <xacro:property name="femur_4_izz" value="0.001691"/>
 
-    <xacro:property name="tibia_4_ixx" value="0.001806"/>
-    <xacro:property name="tibia_4_ixy" value="-1.6e-05"/>
-    <xacro:property name="tibia_4_ixz" value="0.0"/>
-    <xacro:property name="tibia_4_iyy" value="0.000223"/>
+    <xacro:property name="tibia_4_ixx" value="0.00103"/>
+    <xacro:property name="tibia_4_ixy" value="0.000792"/>
+    <xacro:property name="tibia_4_ixz" value="-0.0"/>
+    <xacro:property name="tibia_4_iyy" value="0.000998"/>
     <xacro:property name="tibia_4_iyz" value="0.0"/>
     <xacro:property name="tibia_4_izz" value="0.001984"/>
 
@@ -278,104 +279,104 @@ Structure:
     <!-- LEG 5 - REAR MIDDLE                       -->
     <!-- ========================================== -->
     
-    <xacro:property name="coxa_joint_5_xyz" value="0.054782 0.265632 0.013762"/>
+    <xacro:property name="coxa_joint_5_xyz" value="-0.0265 0.2993 0.013762"/>
     <xacro:property name="coxa_joint_5_axis" value="0.0 0.0 1.0"/>
-    <xacro:property name="femur_joint_5_xyz" value="0.041861 0.041861 -0.01285"/>
-    <xacro:property name="femur_joint_5_axis" value="0.707107 -0.707107 0.0"/>
-    <xacro:property name="tibia_joint_5_xyz" value="0.067458 0.067458 0.0"/>
-    <xacro:property name="tibia_joint_5_axis" value="0.707107 -0.707107 -0.0"/>
+    <xacro:property name="femur_joint_5_xyz" value="0.0 0.0592 -0.01285"/>
+    <xacro:property name="femur_joint_5_axis" value="1.0 -0.0 0.0"/>
+    <xacro:property name="tibia_joint_5_xyz" value="0.0 0.0954 0.0"/>
+    <xacro:property name="tibia_joint_5_axis" value="1.0 -0.0 -0.0"/>
 
     <!-- Link visual origins and orientations -->
-    <xacro:property name="coxa_5_c_xyz" value="-0.054782 -0.265632 -0.013762"/>
+    <xacro:property name="coxa_5_c_xyz" value="0.0265 -0.2993 -0.013762"/>
     <xacro:property name="coxa_5_c_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_5_v_xyz" value="-0.054782 -0.265632 -0.013762"/>
+    <xacro:property name="coxa_5_v_xyz" value="0.0265 -0.2993 -0.013762"/>
     <xacro:property name="coxa_5_v_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_5_i_xyz" value="0.0259977001639473 0.02599770002112145 -0.010119187749198275"/>
+    <xacro:property name="coxa_5_i_xyz" value="-1.5211790160840621e-13 0.03676640679628457 -0.010119187749198275"/>
     <xacro:property name="coxa_5_i_rpy" value="0 0 0"/>
-    <xacro:property name="femur_5_c_xyz" value="-0.096643 -0.307493 -0.000912"/>
+    <xacro:property name="femur_5_c_xyz" value="0.0265 -0.3585 -0.000912"/>
     <xacro:property name="femur_5_c_rpy" value="0 0 0"/>
-    <xacro:property name="femur_5_v_xyz" value="-0.096643 -0.307493 -0.000912"/>
+    <xacro:property name="femur_5_v_xyz" value="0.0265 -0.3585 -0.000912"/>
     <xacro:property name="femur_5_v_rpy" value="0 0 0"/>
-    <xacro:property name="femur_5_i_xyz" value="0.03372863930509079 0.03372863916204982 3.1916429977672713e-07"/>
+    <xacro:property name="femur_5_i_xyz" value="-3.469446951953614e-18 0.047699999713918695 3.191642998002543e-07"/>
     <xacro:property name="femur_5_i_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_5_c_xyz" value="-0.164101 -0.374951 -0.000912"/>
+    <xacro:property name="tibia_5_c_xyz" value="0.0265 -0.4539 -0.000912"/>
     <xacro:property name="tibia_5_c_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_5_v_xyz" value="-0.164101 -0.374951 -0.000912"/>
+    <xacro:property name="tibia_5_v_xyz" value="0.0265 -0.4539 -0.000912"/>
     <xacro:property name="tibia_5_v_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_5_i_xyz" value="0.0442362191094724 0.04438810898985973 3.1916429897083966e-07"/>
+    <xacro:property name="tibia_5_i_xyz" value="-0.00010740246556075264 0.06266738253711773 3.191642990343739e-07"/>
     <xacro:property name="tibia_5_i_rpy" value="0 0 0"/>
 
-    <xacro:property name="coxa_5_ixx" value="0.000165"/>
-    <xacro:property name="coxa_5_ixy" value="-3e-05"/>
-    <xacro:property name="coxa_5_ixz" value="2e-05"/>
-    <xacro:property name="coxa_5_iyy" value="0.000165"/>
-    <xacro:property name="coxa_5_iyz" value="2e-05"/>
+    <xacro:property name="coxa_5_ixx" value="0.000195"/>
+    <xacro:property name="coxa_5_ixy" value="-0.0"/>
+    <xacro:property name="coxa_5_ixz" value="-0.0"/>
+    <xacro:property name="coxa_5_iyy" value="0.000135"/>
+    <xacro:property name="coxa_5_iyz" value="2.8e-05"/>
     <xacro:property name="coxa_5_izz" value="0.000292"/>
 
-    <xacro:property name="femur_5_ixx" value="0.000947"/>
-    <xacro:property name="femur_5_ixy" value="-0.000627"/>
-    <xacro:property name="femur_5_ixz" value="0.0"/>
-    <xacro:property name="femur_5_iyy" value="0.000947"/>
+    <xacro:property name="femur_5_ixx" value="0.001575"/>
+    <xacro:property name="femur_5_ixy" value="0.0"/>
+    <xacro:property name="femur_5_ixz" value="-0.0"/>
+    <xacro:property name="femur_5_iyy" value="0.00032"/>
     <xacro:property name="femur_5_iyz" value="0.0"/>
     <xacro:property name="femur_5_izz" value="0.001691"/>
 
-    <xacro:property name="tibia_5_ixx" value="0.000998"/>
-    <xacro:property name="tibia_5_ixy" value="-0.000792"/>
+    <xacro:property name="tibia_5_ixx" value="0.001806"/>
+    <xacro:property name="tibia_5_ixy" value="-1.6e-05"/>
     <xacro:property name="tibia_5_ixz" value="0.0"/>
-    <xacro:property name="tibia_5_iyy" value="0.00103"/>
+    <xacro:property name="tibia_5_iyy" value="0.000223"/>
     <xacro:property name="tibia_5_iyz" value="0.0"/>
     <xacro:property name="tibia_5_izz" value="0.001984"/>
 
     <!-- ========================================== -->
     <!-- LEG 6 - REAR RIGHT                        -->
     <!-- ========================================== -->
-    
-    <xacro:property name="coxa_joint_6_xyz" value="0.054782 0.103068 0.013762"/>
+
+    <xacro:property name="coxa_joint_6_xyz" value="0.054782 0.265632 0.013762"/>
     <xacro:property name="coxa_joint_6_axis" value="0.0 0.0 1.0"/>
-    <xacro:property name="femur_joint_6_xyz" value="0.041861 -0.041861 -0.01285"/>
-    <xacro:property name="femur_joint_6_axis" value="-0.707107 -0.707107 0.0"/>
-    <xacro:property name="tibia_joint_6_xyz" value="0.067458 -0.067458 0.0"/>
-    <xacro:property name="tibia_joint_6_axis" value="-0.707107 -0.707107 -0.0"/>
-    
+    <xacro:property name="femur_joint_6_xyz" value="0.041861 0.041861 -0.01285"/>
+    <xacro:property name="femur_joint_6_axis" value="0.707107 -0.707107 0.0"/>
+    <xacro:property name="tibia_joint_6_xyz" value="0.067458 0.067458 0.0"/>
+    <xacro:property name="tibia_joint_6_axis" value="0.707107 -0.707107 -0.0"/>
+
     <!-- Link visual origins and orientations -->
-    <xacro:property name="coxa_6_c_xyz" value="-0.054782 -0.103068 -0.013762"/>
+    <xacro:property name="coxa_6_c_xyz" value="-0.054782 -0.265632 -0.013762"/>
     <xacro:property name="coxa_6_c_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_6_v_xyz" value="-0.054782 -0.103068 -0.013762"/>
+    <xacro:property name="coxa_6_v_xyz" value="-0.054782 -0.265632 -0.013762"/>
     <xacro:property name="coxa_6_v_rpy" value="0 0 0"/>
-    <xacro:property name="coxa_6_i_xyz" value="0.025997700164162404 -0.02599770030698831 -0.010119187749198275"/>
+    <xacro:property name="coxa_6_i_xyz" value="0.0259977001639473 0.02599770002112145 -0.010119187749198275"/>
     <xacro:property name="coxa_6_i_rpy" value="0 0 0"/>
-    <xacro:property name="femur_6_c_xyz" value="-0.096643 -0.061207 -0.000912"/>
+    <xacro:property name="femur_6_c_xyz" value="-0.096643 -0.307493 -0.000912"/>
     <xacro:property name="femur_6_c_rpy" value="0 0 0"/>
-    <xacro:property name="femur_6_v_xyz" value="-0.096643 -0.061207 -0.000912"/>
+    <xacro:property name="femur_6_v_xyz" value="-0.096643 -0.307493 -0.000912"/>
     <xacro:property name="femur_6_v_rpy" value="0 0 0"/>
-    <xacro:property name="femur_6_i_xyz" value="0.03372863930509079 -0.0337286394481318 3.1916429977672713e-07"/>
+    <xacro:property name="femur_6_i_xyz" value="0.03372863930509079 0.03372863916204982 3.1916429977672713e-07"/>
     <xacro:property name="femur_6_i_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_6_c_xyz" value="-0.164101 0.006251 -0.000912"/>
+    <xacro:property name="tibia_6_c_xyz" value="-0.164101 -0.374951 -0.000912"/>
     <xacro:property name="tibia_6_c_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_6_v_xyz" value="-0.164101 0.006251 -0.000912"/>
+    <xacro:property name="tibia_6_v_xyz" value="-0.164101 -0.374951 -0.000912"/>
     <xacro:property name="tibia_6_v_rpy" value="0 0 0"/>
-    <xacro:property name="tibia_6_i_xyz" value="0.0443881091329007 -0.04423621925251339 3.1916429900401624e-07"/>
+    <xacro:property name="tibia_6_i_xyz" value="0.0442362191094724 0.04438810898985973 3.1916429897083966e-07"/>
     <xacro:property name="tibia_6_i_rpy" value="0 0 0"/>
 
     <xacro:property name="coxa_6_ixx" value="0.000165"/>
-    <xacro:property name="coxa_6_ixy" value="3e-05"/>
+    <xacro:property name="coxa_6_ixy" value="-3e-05"/>
     <xacro:property name="coxa_6_ixz" value="2e-05"/>
     <xacro:property name="coxa_6_iyy" value="0.000165"/>
-    <xacro:property name="coxa_6_iyz" value="-2e-05"/>
+    <xacro:property name="coxa_6_iyz" value="2e-05"/>
     <xacro:property name="coxa_6_izz" value="0.000292"/>
-    
+
     <xacro:property name="femur_6_ixx" value="0.000947"/>
-    <xacro:property name="femur_6_ixy" value="0.000627"/>
+    <xacro:property name="femur_6_ixy" value="-0.000627"/>
     <xacro:property name="femur_6_ixz" value="0.0"/>
     <xacro:property name="femur_6_iyy" value="0.000947"/>
-    <xacro:property name="femur_6_iyz" value="-0.0"/>
+    <xacro:property name="femur_6_iyz" value="0.0"/>
     <xacro:property name="femur_6_izz" value="0.001691"/>
 
-    <xacro:property name="tibia_6_ixx" value="0.00103"/>
-    <xacro:property name="tibia_6_ixy" value="0.000792"/>
+    <xacro:property name="tibia_6_ixx" value="0.000998"/>
+    <xacro:property name="tibia_6_ixy" value="-0.000792"/>
     <xacro:property name="tibia_6_ixz" value="0.0"/>
-    <xacro:property name="tibia_6_iyy" value="0.000998"/>
-    <xacro:property name="tibia_6_iyz" value="-0.0"/>
+    <xacro:property name="tibia_6_iyy" value="0.00103"/>
+    <xacro:property name="tibia_6_iyz" value="0.0"/>
     <xacro:property name="tibia_6_izz" value="0.001984"/>
 
     <!-- ========================================== -->
