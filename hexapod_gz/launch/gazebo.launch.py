@@ -80,31 +80,26 @@ def generate_launch_description():
         parameters=[params],
     )
 
+    controller_manager_node = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[
+            params,  # Includes 'robot_description'
+            os.path.join(hexapod_model_description_path, 'config', 'controllers.yaml')
+        ],
+        output='screen',
+    )
+
     # Bridge z dodanymi sensorami kontaktu
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-            '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
-            '/world/empty/model/hexapod/link/link4_1/sensor/sensor_contact_1/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            '/world/empty/model/hexapod/link/link4_2/sensor/sensor_contact_2/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            '/world/empty/model/hexapod/link/link4_3/sensor/sensor_contact_3/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            '/world/empty/model/hexapod/link/link4_4/sensor/sensor_contact_4/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            '/world/empty/model/hexapod/link/link4_5/sensor/sensor_contact_5/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            '/world/empty/model/hexapod/link/link4_6/sensor/sensor_contact_6/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            # '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
         ],
         output='screen',
     )
-
-    # # Contact Detection Node
-    # contact_detection_node = Node(
-    #     package='hexapod_model_description',
-    #     executable='contact_sensor.py',
-    #     name='contact_sensor',
-    #     output='screen',
-    #     parameters=[{'use_sim_time': use_sim_time}],
-    # )
 
     # Spawning modelu w Gazebo
     gz_spawn_entity = Node(
@@ -126,7 +121,7 @@ def generate_launch_description():
 
     # Dodanie krótkiej pauzy przed ładowaniem kontrolerów
     initial_pause = ExecuteProcess(
-        cmd=['sleep', '5.0'],
+        cmd=['sleep', '10.0'],
         output='screen',
     )
 
@@ -195,7 +190,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Tworzenie sekwencji uruchomienia
     launch_sequence = [
         gazebo_resource_path,
         declare_use_sim_time,
@@ -203,8 +197,8 @@ def generate_launch_description():
         gazebo,
         bridge,
         node_robot_state_publisher,
+        controller_manager_node,
         gz_spawn_entity,
-        # contact_detection_node,  # Dodanie contact detection node
     ]
     
     # Rejestracja zdarzenia do ładowania joint_state_broadcaster z opóźnieniem
