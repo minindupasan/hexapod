@@ -28,12 +28,12 @@ Structure:
     <xacro:property name="tibia_mass" value="0.6509579807539126" />    
 
     <!-- Joint angle limits (radians) -->
-    <xacro:property name="coxa_joint_lower" value="-0.785398163"/>  <!-- ±45° -->
-    <xacro:property name="coxa_joint_upper" value="0.785398163"/>
-    <xacro:property name="femur_joint_lower" value="-1.047197551"/>  <!-- ±60° -->
-    <xacro:property name="femur_joint_upper" value="1.047197551"/>
-    <xacro:property name="tibia_joint_lower" value="-0.523598776"/>  <!-- -30° to 90° -->
-    <xacro:property name="tibia_joint_upper" value="1.570796327"/> 
+    <xacro:property name="coxa_joint_lower" value="-1.5708"/>  <!-- ±45° -->
+    <xacro:property name="coxa_joint_upper" value="1.5708"/>
+    <xacro:property name="femur_joint_lower" value="-1.5708"/>  <!-- ±60° -->
+    <xacro:property name="femur_joint_upper" value="1.5708"/>
+    <xacro:property name="tibia_joint_lower" value="-2.35619"/>  <!-- -30° to 90° -->
+    <xacro:property name="tibia_joint_upper" value="0"/> 
 
     <!-- Servo motor specifications -->
     <xacro:property name="coxa_joint_effort" value="2.548"/>      <!-- Nm -->
