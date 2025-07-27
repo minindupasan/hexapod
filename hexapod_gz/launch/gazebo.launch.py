@@ -18,12 +18,12 @@ import xacro
 
 def generate_launch_description():
     # Pobieranie ścieżek do pakietów
-    hexapod_model_description_path = get_package_share_directory('hexapod_model_description')
+    hexapod_description_path = get_package_share_directory('hexapod_model_description')
     hex_gz_path = get_package_share_directory('hexapod_gz')
     
     # Argumenty uruchomieniowe
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    world = LaunchConfiguration('world', default='empty')
+    world = LaunchConfiguration('world', default='empty_ode')
     
     # Deklaracja argumentów
     declare_use_sim_time = DeclareLaunchArgument(
@@ -34,35 +34,36 @@ def generate_launch_description():
     
     declare_world = DeclareLaunchArgument(
         'world',
-        default_value='empty',
+        default_value='empty_ode',  # Now consistent
         description='Gazebo World file name'
-    )
+    )   
     
     # Ustawienie ścieżki zasobów dla Gazebo
     gazebo_resource_path = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
         value=[
             os.path.join(hex_gz_path, 'worlds'),
-            ':' + str(Path(hexapod_model_description_path).parent.resolve()),
+            ':' + str(Path(hexapod_description_path).parent.resolve()),
         ],
     )
 
-    # Uruchomienie Gazebo
+    # Fixed Gazebo launch
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch'),
             '/gz_sim.launch.py',
         ]),
         launch_arguments=[
-            ('gz_args', [world, '.sdf', ' -v 4', ' -r']),
+            ('gz_args', ['-r -v 4 ', world, '.sdf']),  # Fixed format
+            ('on_exit_shutdown', 'true'),  # Prevent auto-close
         ],
     )
 
     # Przetwarzanie pliku XACRO
     xacro_file = os.path.join(
-        hexapod_model_description_path,
+        hexapod_description_path,
         'urdf',
-        'hexapod_model.urdf.xacro',
+        'hexapod.urdf.xacro',
     )
 
     # Parsowanie pliku XACRO z parametrem use_sim=true
@@ -86,11 +87,18 @@ def generate_launch_description():
         executable='parameter_bridge',
         arguments=[
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+            # '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            # '/world/empty/model/hexapod/link/link4_1/sensor/sensor_contact_1/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            # '/world/empty/model/hexapod/link/link4_2/sensor/sensor_contact_2/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            # '/world/empty/model/hexapod/link/link4_3/sensor/sensor_contact_3/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            # '/world/empty/model/hexapod/link/link4_4/sensor/sensor_contact_4/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            # '/world/empty/model/hexapod/link/link4_5/sensor/sensor_contact_5/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            # '/world/empty/model/hexapod/link/link4_6/sensor/sensor_contact_6/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
         ],
         output='screen',
     )
 
-    # Contact Detection Node
+    # # Contact Detection Node
     # contact_detection_node = Node(
     #     package='hexapod_model_description',
     #     executable='contact_sensor.py',
@@ -188,6 +196,7 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Tworzenie sekwencji uruchomienia
     launch_sequence = [
         gazebo_resource_path,
         declare_use_sim_time,
@@ -196,7 +205,7 @@ def generate_launch_description():
         bridge,
         node_robot_state_publisher,
         gz_spawn_entity,
-        # contact_detection_node,  # Comment this out
+        # contact_detection_node,  # Dodanie contact detection node
     ]
     
     # Rejestracja zdarzenia do ładowania joint_state_broadcaster z opóźnieniem
@@ -209,6 +218,7 @@ def generate_launch_description():
         )
     )
     
+    # Rejestracja zdarzenia do ładowania kontrolerów nóg po załadowaniu joint_state_broadcaster
     launch_sequence.append(
         RegisterEventHandler(
             event_handler=OnProcessExit(

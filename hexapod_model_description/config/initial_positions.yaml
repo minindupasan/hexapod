@@ -1,24 +1,21 @@
+# Default initial positions for hexapod's ros2_control configuration.
+
 initial_positions:
-  # Coxa joints (hip rotation) - all at neutral position
-  coxa_1_joint: 0.0
-  coxa_2_joint: 0.0
-  coxa_3_joint: 0.0
-  coxa_4_joint: 0.0
-  coxa_5_joint: 0.0
-  coxa_6_joint: 0.0
-
-  # Femur joints (thigh movement) - slightly forward lean (10 degrees)
-  femur_1_joint: 0.174532925
-  femur_2_joint: 0.174532925
-  femur_3_joint: 0.174532925
-  femur_4_joint: 0.174532925
-  femur_5_joint: 0.174532925
-  femur_6_joint: 0.174532925
-
-  # Tibia joints (shin/foot movement) - bent for stance position (80 degrees)
-  tibia_1_joint: 1.396263402
-  tibia_2_joint: 1.396263402
-  tibia_3_joint: 1.396263402
-  tibia_4_joint: 1.396263402
-  tibia_5_joint: 1.396263402
-  tibia_6_joint: 1.396263402
+  joint1_1: 0.0
+  joint1_2: 0.0
+  joint1_3: 0.0
+  joint1_4: 0.0
+  joint1_5: 0.0
+  joint1_6: 0.0
+  joint2_1: 0.0
+  joint2_2: 0.0
+  joint2_3: 0.0
+  joint2_4: 0.0
+  joint2_5: 0.0
+  joint2_6: 0.0
+  joint3_1: 0.0
+  joint3_2: 0.0
+  joint3_3: 0.0
+  joint3_4: 0.0
+  joint3_5: 0.0
+  joint3_6: 0.0

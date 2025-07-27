@@ -23,13 +23,12 @@ controller_manager:
     leg6_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
-# Individual leg controller configurations
 leg1_controller:
   ros__parameters:
     joints:
-      - coxa_1_joint
-      - femur_1_joint
-      - tibia_1_joint
+      - coxa_joint_1
+      - femur_joint_1
+      - tibia_joint_1
     command_interfaces:
       - position
     state_interfaces:
@@ -40,9 +39,9 @@ leg1_controller:
 leg2_controller:
   ros__parameters:
     joints:
-      - coxa_2_joint
-      - femur_2_joint
-      - tibia_2_joint
+      - coxa_joint_2
+      - femur_joint_2
+      - tibia_joint_2
     command_interfaces:
       - position
     state_interfaces:
@@ -53,9 +52,9 @@ leg2_controller:
 leg3_controller:
   ros__parameters:
     joints:
-      - coxa_3_joint
-      - femur_3_joint
-      - tibia_3_joint
+      - coxa_joint_3
+      - femur_joint_3
+      - tibia_joint_3
     command_interfaces:
       - position
     state_interfaces:
@@ -66,9 +65,9 @@ leg3_controller:
 leg4_controller:
   ros__parameters:
     joints:
-      - coxa_4_joint
-      - femur_4_joint
-      - tibia_4_joint
+      - coxa_joint_4
+      - femur_joint_4
+      - tibia_joint_4
     command_interfaces:
       - position
     state_interfaces:
@@ -79,9 +78,9 @@ leg4_controller:
 leg5_controller:
   ros__parameters:
     joints:
-      - coxa_5_joint
-      - femur_5_joint
-      - tibia_5_joint
+      - coxa_joint_5
+      - femur_joint_5
+      - tibia_joint_5
     command_interfaces:
       - position
     state_interfaces:
@@ -92,9 +91,9 @@ leg5_controller:
 leg6_controller:
   ros__parameters:
     joints:
-      - coxa_6_joint
-      - femur_6_joint
-      - tibia_6_joint
+      - coxa_joint_6
+      - femur_joint_6
+      - tibia_joint_6
     command_interfaces:
       - position
     state_interfaces:
