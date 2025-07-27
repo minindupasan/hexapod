@@ -81,32 +81,35 @@ class HexapodSpiderTeleop(Node):
             6: np.array([-0.08, -0.12, 0.014])   # Back-right
         }
 
-        # Leg mounting angles (angle from body centerline to leg)
-        # Forward direction is toward legs 1 and 4 (front of hexapod)
-        # 0° = straight forward, positive = counterclockwise
+        # FIXED: Leg mounting angles corrected for proper forward direction
+        # Forward is now correctly toward legs 1 and 4 (positive X direction)
+        # 0° = positive X axis (toward legs 1&4), positive = counterclockwise
         self.leg_angles = {
-            1: 30.0,   # Front-left: 30° from forward (slightly outward)
-            2: 90.0,   # Middle-left: 90° from forward (pure sideways)
-            3: 150.0,  # Back-left: 150° from forward (slightly inward from back)
-            4: -30.0,  # Front-right: -30° from forward (slightly outward)
-            5: -90.0,  # Middle-right: -90° from forward (pure sideways)
-            6: -150.0  # Back-right: -150° from forward (slightly inward from back)
+            1: 45.0,    # Front-left: 45° from X axis
+            2: 90.0,    # Middle-left: 90° from X axis (pointing in Y direction)
+            3: 135.0,   # Back-left: 135° from X axis
+            4: -45.0,   # Front-right: -45° from X axis
+            5: -90.0,   # Middle-right: -90° from X axis (pointing in -Y direction)
+            6: -135.0   # Back-right: -135° from X axis
         }
 
         # Movement parameters
         self.step_height = 1        # Foot lift height during swing
-        self.base_step_angle = 5     # Base coxa rotation for each step (radians)
-        self.lift_femur_offset = 0.15  # Reduced femur adjustment for lifting
-        self.lift_tibia_offset = 0.2   # Reduced tibia adjustment for lifting
-        self.base_cycle_time = 1.5     # Base time for complete gait cycle
-        self.points_per_phase = 15     # More trajectory points for smoothness
+        self.base_step_angle = 0.15     # Base coxa rotation for each step (radians)
+        self.lift_femur_offset = 0.25   # Femur adjustment for smooth lifting
+        self.lift_tibia_offset = 0.35   # Tibia adjustment for smooth lifting
+        self.base_cycle_time = 1.5      # Base time for complete gait cycle
+        self.points_per_phase = 20      # More trajectory points for smoothness
         
-        # Speed control
+        # Extended speed control with more profiles
         self.speed_levels = {
-            'slow': 0.5,      # 50% speed
-            'normal': 1.0,    # 100% speed
-            'fast': 1.5,      # 150% speed
-            'turbo': 2.0      # 200% speed
+            'crawl': 0.3,      # 30% speed - very slow
+            'slow': 0.5,       # 50% speed
+            'normal': 1.0,     # 100% speed
+            'fast': 1.5,       # 150% speed
+            'turbo': 2.0,      # 200% speed
+            'sprint': 2.5,     # 250% speed
+            'max': 3.0         # 300% speed - maximum
         }
         self.current_speed = 'normal'
         self.speed_multiplier = self.speed_levels[self.current_speed]
@@ -118,6 +121,10 @@ class HexapodSpiderTeleop(Node):
         # Movement state
         self.is_moving = False
         self.movement_thread = None
+        
+        # Smooth transition parameters
+        self.use_smooth_transitions = True
+        self.transition_smoothness = 0.8  # Smoothing factor (0-1)
         
         # Terminal setup
         self.old_attr = termios.tcgetattr(sys.stdin)
@@ -149,10 +156,13 @@ class HexapodSpiderTeleop(Node):
         ║   e/E : Diagonal forward-right                                ║
         ║                                                               ║
         ║ Speed Controls:                                               ║
-        ║   1 : Slow speed (50%)                                        ║
-        ║   2 : Normal speed (100%) [Default]                           ║
-        ║   3 : Fast speed (150%)                                       ║
-        ║   4 : Turbo speed (200%)                                      ║
+        ║   1 : Crawl speed (30%)                                       ║
+        ║   2 : Slow speed (50%)                                        ║
+        ║   3 : Normal speed (100%) [Default]                           ║
+        ║   4 : Fast speed (150%)                                       ║
+        ║   5 : Turbo speed (200%)                                      ║
+        ║   6 : Sprint speed (250%)                                     ║
+        ║   7 : Max speed (300%)                                        ║
         ║                                                               ║
         ║ Control Commands:                                             ║
         ║   x/X : Stop movement                                         ║
@@ -177,8 +187,8 @@ class HexapodSpiderTeleop(Node):
         cycle_time = self.base_cycle_time / speed_mult
         
         # Clamp values to safe ranges
-        step_angle = min(step_angle, 0.4)  # Max step angle for safety
-        cycle_time = max(cycle_time, 0.8)  # Min cycle time for stability
+        step_angle = min(step_angle, 0.5)  # Max step angle for safety
+        cycle_time = max(cycle_time, 0.5)  # Min cycle time for stability
         
         return step_angle, cycle_time
 
@@ -196,6 +206,17 @@ class HexapodSpiderTeleop(Node):
         limits = self.joint_limits[joint_type]
         return max(limits[0], min(limits[1], angle))
 
+    def smooth_trajectory(self, start_val, end_val, phase, total_phases):
+        """Generate smooth trajectory between two values using cosine interpolation."""
+        if total_phases <= 1:
+            return end_val
+        
+        # Cosine interpolation for smoother motion
+        t = phase / (total_phases - 1)
+        cos_val = (1 - math.cos(t * math.pi)) / 2
+        
+        return start_val + (end_val - start_val) * cos_val
+
     def generate_step_angles(self, leg_num, direction, step_phase, total_phases):
         """Generate joint angles for a specific step phase."""
         base_angles = self.neutral_angles[leg_num].copy()
@@ -211,8 +232,8 @@ class HexapodSpiderTeleop(Node):
         coxa_rotation = 0.0
         
         if direction == "forward":
-            # For forward motion toward legs 1&4 direction
-            # Each leg contributes based on its forward component
+            # FIXED: For forward motion in positive X direction (toward legs 1&4)
+            # Project desired motion onto leg's natural motion direction
             forward_component = math.cos(leg_angle)
             coxa_rotation = step_angle * forward_component
             
@@ -223,34 +244,39 @@ class HexapodSpiderTeleop(Node):
             
         elif direction == "turn_left":
             # For left turn, all legs should create counter-clockwise rotation
-            # Use cross product component for rotation
-            coxa_rotation = step_angle * 0.7
+            # Tangential component for rotation
+            tangent_component = 1.0 if leg_num in [1, 2, 3] else -1.0
+            coxa_rotation = step_angle * 0.8 * tangent_component
             
         elif direction == "turn_right":
             # For right turn, all legs should create clockwise rotation
-            coxa_rotation = -step_angle * 0.7
+            tangent_component = -1.0 if leg_num in [1, 2, 3] else 1.0
+            coxa_rotation = step_angle * 0.8 * tangent_component
             
         elif direction == "forward_left":
             # Combine forward and left turn components
             forward_component = math.cos(leg_angle)
-            side_component = math.sin(leg_angle)
-            coxa_rotation = step_angle * (0.6 * forward_component + 0.4 * side_component)
+            tangent_component = 0.5 if leg_num in [1, 2, 3] else -0.5
+            coxa_rotation = step_angle * (0.7 * forward_component + 0.3 * tangent_component)
                 
         elif direction == "forward_right":
             # Combine forward and right turn components
             forward_component = math.cos(leg_angle)
-            side_component = math.sin(leg_angle)
-            coxa_rotation = step_angle * (0.6 * forward_component - 0.4 * side_component)
+            tangent_component = -0.5 if leg_num in [1, 2, 3] else 0.5
+            coxa_rotation = step_angle * (0.7 * forward_component + 0.3 * tangent_component)
 
-        # Apply step phase with improved smoothing
-        if total_phases > 1:
-            phase_ratio = step_phase / (total_phases - 1)
-            # Use a more gradual curve for smoother movement
-            smooth_ratio = phase_ratio * phase_ratio * (3.0 - 2.0 * phase_ratio)  # Smoothstep function
+        # Use smooth trajectory for step motion
+        if self.use_smooth_transitions:
+            coxa_angle = self.smooth_trajectory(coxa_base, coxa_base + coxa_rotation, 
+                                              step_phase, total_phases)
         else:
-            smooth_ratio = 1.0
-        
-        coxa_angle = coxa_base + coxa_rotation * smooth_ratio
+            # Original linear interpolation
+            if total_phases > 1:
+                phase_ratio = step_phase / (total_phases - 1)
+                smooth_ratio = phase_ratio * phase_ratio * (3.0 - 2.0 * phase_ratio)
+            else:
+                smooth_ratio = 1.0
+            coxa_angle = coxa_base + coxa_rotation * smooth_ratio
         
         # Apply joint limits
         coxa_angle = self.clamp_joint_angle(coxa_angle, 'coxa')
@@ -258,23 +284,40 @@ class HexapodSpiderTeleop(Node):
         return [coxa_angle, femur_base, tibia_base]
 
     def generate_lift_angles(self, leg_num, lift_phase, total_phases):
-        """Generate joint angles for lifting leg during swing phase."""
+        """Generate joint angles for lifting leg during swing phase with smooth motion."""
         base_angles = self.neutral_angles[leg_num].copy()
         coxa_base, femur_base, tibia_base = base_angles
         
-        # Create smooth lift trajectory
+        # Create smooth lift trajectory using sine wave for natural motion
         if total_phases > 1:
             phase_ratio = lift_phase / (total_phases - 1)
         else:
             phase_ratio = 1.0
         
-        # Use smoothstep for more natural lifting motion
-        lift_factor = phase_ratio * phase_ratio * (3.0 - 2.0 * phase_ratio)
-        lift_factor = math.sin(lift_factor * math.pi)  # Apply sine for even smoother curve
+        # Use sine wave for smooth lifting and lowering
+        lift_factor = math.sin(phase_ratio * math.pi)
         
-        # Adjust femur and tibia for lifting
-        femur_angle = femur_base + self.lift_femur_offset * lift_factor
-        tibia_angle = tibia_base + self.lift_tibia_offset * lift_factor
+        # Apply smoothing factor to reduce jerkiness
+        lift_factor *= self.transition_smoothness
+        
+        # Smooth trajectories for femur and tibia
+        if self.use_smooth_transitions:
+            # Use cosine interpolation for even smoother motion
+            femur_target = femur_base + self.lift_femur_offset
+            tibia_target = tibia_base + self.lift_tibia_offset
+            
+            femur_angle = self.smooth_trajectory(femur_base, femur_target, 
+                                               lift_phase, total_phases)
+            tibia_angle = self.smooth_trajectory(tibia_base, tibia_target, 
+                                               lift_phase, total_phases)
+            
+            # Apply lift factor for arc motion
+            femur_angle = femur_base + (femur_angle - femur_base) * lift_factor
+            tibia_angle = tibia_base + (tibia_angle - tibia_base) * lift_factor
+        else:
+            # Original method
+            femur_angle = femur_base + self.lift_femur_offset * lift_factor
+            tibia_angle = tibia_base + self.lift_tibia_offset * lift_factor
         
         # Apply joint limits
         femur_angle = self.clamp_joint_angle(femur_angle, 'femur')
@@ -283,7 +326,7 @@ class HexapodSpiderTeleop(Node):
         return [coxa_base, femur_angle, tibia_angle]
 
     def execute_tripod_gait_step(self, direction):
-        """Execute one complete tripod gait cycle."""
+        """Execute one complete tripod gait cycle with smooth transitions."""
         # Get current speed parameters
         _, cycle_time = self.get_current_movement_params()
         phase_duration = cycle_time / (2 * self.points_per_phase)  # Time per trajectory point
@@ -298,22 +341,30 @@ class HexapodSpiderTeleop(Node):
                 
             for leg in range(1, 7):
                 if leg in self.tripod_1:
-                    # Swing phase: lift and step
+                    # Swing phase: lift and step with smooth transition
                     if phase < self.points_per_phase // 2:
-                        # First half: lift
+                        # First half: smooth lift
                         angles = self.generate_lift_angles(leg, phase, self.points_per_phase // 2)
                         if phase == 0:  # Debug first step
                             self.get_logger().debug(f'Leg {leg} lifting: {[round(a, 3) for a in angles]}')
                     else:
-                        # Second half: step forward and lower
+                        # Second half: step forward while lowering smoothly
                         step_phase = phase - self.points_per_phase // 2
-                        lift_angles = self.generate_lift_angles(leg, 
-                                                              self.points_per_phase // 2 - step_phase - 1, 
-                                                              self.points_per_phase // 2)
+                        lift_phase = self.points_per_phase // 2 - step_phase - 1
+                        
+                        # Generate smooth combined motion
+                        lift_angles = self.generate_lift_angles(leg, lift_phase, self.points_per_phase // 2)
                         step_angles = self.generate_step_angles(leg, direction, step_phase, 
                                                               self.points_per_phase // 2)
-                        # Combine lift and step
-                        angles = [step_angles[0], lift_angles[1], lift_angles[2]]
+                        
+                        # Smoothly blend lift and step motions
+                        blend_factor = step_phase / (self.points_per_phase // 2 - 1) if self.points_per_phase > 2 else 1.0
+                        angles = [
+                            step_angles[0],  # Coxa follows step trajectory
+                            lift_angles[1] * (1 - blend_factor) + step_angles[1] * blend_factor,  # Smooth femur blend
+                            lift_angles[2] * (1 - blend_factor) + step_angles[2] * blend_factor   # Smooth tibia blend
+                        ]
+                        
                         if step_phase == 0:  # Debug first step
                             leg_angle_deg = self.leg_angles[leg]
                             self.get_logger().debug(f'Leg {leg} (angle {leg_angle_deg}°) stepping: {[round(a, 3) for a in angles]}')
@@ -333,22 +384,30 @@ class HexapodSpiderTeleop(Node):
                 
             for leg in range(1, 7):
                 if leg in self.tripod_2:
-                    # Swing phase: lift and step
+                    # Swing phase: lift and step with smooth transition
                     if phase < self.points_per_phase // 2:
-                        # First half: lift
+                        # First half: smooth lift
                         angles = self.generate_lift_angles(leg, phase, self.points_per_phase // 2)
                         if phase == 0:  # Debug first step
                             self.get_logger().debug(f'Leg {leg} lifting: {[round(a, 3) for a in angles]}')
                     else:
-                        # Second half: step forward and lower
+                        # Second half: step forward while lowering smoothly
                         step_phase = phase - self.points_per_phase // 2
-                        lift_angles = self.generate_lift_angles(leg, 
-                                                              self.points_per_phase // 2 - step_phase - 1, 
-                                                              self.points_per_phase // 2)
+                        lift_phase = self.points_per_phase // 2 - step_phase - 1
+                        
+                        # Generate smooth combined motion
+                        lift_angles = self.generate_lift_angles(leg, lift_phase, self.points_per_phase // 2)
                         step_angles = self.generate_step_angles(leg, direction, step_phase, 
                                                               self.points_per_phase // 2)
-                        # Combine lift and step
-                        angles = [step_angles[0], lift_angles[1], lift_angles[2]]
+                        
+                        # Smoothly blend lift and step motions
+                        blend_factor = step_phase / (self.points_per_phase // 2 - 1) if self.points_per_phase > 2 else 1.0
+                        angles = [
+                            step_angles[0],  # Coxa follows step trajectory
+                            lift_angles[1] * (1 - blend_factor) + step_angles[1] * blend_factor,  # Smooth femur blend
+                            lift_angles[2] * (1 - blend_factor) + step_angles[2] * blend_factor   # Smooth tibia blend
+                        ]
+                        
                         if step_phase == 0:  # Debug first step
                             leg_angle_deg = self.leg_angles[leg]
                             self.get_logger().debug(f'Leg {leg} (angle {leg_angle_deg}°) stepping: {[round(a, 3) for a in angles]}')
@@ -368,7 +427,7 @@ class HexapodSpiderTeleop(Node):
             self.execute_tripod_gait_step(direction)
 
     def send_joint_command(self, leg_num, joint_angles, duration_sec):
-        """Send joint trajectory command."""
+        """Send joint trajectory command with velocity and acceleration profiles."""
         duration = Duration()
         duration.sec = int(duration_sec)
         duration.nanosec = int((duration_sec - int(duration_sec)) * 1e9)
@@ -378,7 +437,19 @@ class HexapodSpiderTeleop(Node):
         
         point = JointTrajectoryPoint()
         point.positions = list(map(float, joint_angles))
-        point.velocities = [0.0] * 3
+        
+        # Calculate smooth velocities based on position changes
+        if leg_num in self.current_angles:
+            velocities = []
+            for i in range(3):
+                vel = (joint_angles[i] - self.current_angles[leg_num][i]) / duration_sec
+                # Apply velocity smoothing
+                vel *= 0.8  # Reduce velocity for smoother motion
+                velocities.append(vel)
+            point.velocities = velocities
+        else:
+            point.velocities = [0.0] * 3
+        
         point.accelerations = [0.0] * 3
         point.time_from_start = duration
         
@@ -389,7 +460,7 @@ class HexapodSpiderTeleop(Node):
         self.current_angles[leg_num] = joint_angles.copy()
 
     def reset_to_neutral_stance(self):
-        """Move to neutral spider stance."""
+        """Move to neutral spider stance with smooth transition."""
         self.get_logger().info('Moving to neutral spider stance...')
         self.is_moving = False
         
@@ -470,17 +541,26 @@ class HexapodSpiderTeleop(Node):
             self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("forward_right",))
             self.movement_thread.start()
             
-        elif key == '1':  # Slow speed
+        elif key == '1':  # Crawl speed
+            self.set_speed('crawl')
+            
+        elif key == '2':  # Slow speed
             self.set_speed('slow')
             
-        elif key == '2':  # Normal speed
+        elif key == '3':  # Normal speed
             self.set_speed('normal')
             
-        elif key == '3':  # Fast speed
+        elif key == '4':  # Fast speed
             self.set_speed('fast')
             
-        elif key == '4':  # Turbo speed
+        elif key == '5':  # Turbo speed
             self.set_speed('turbo')
+            
+        elif key == '6':  # Sprint speed
+            self.set_speed('sprint')
+            
+        elif key == '7':  # Max speed
+            self.set_speed('max')
             
         elif key_lower == 'x':  # Stop
             self.get_logger().info('Stopping spider...')
