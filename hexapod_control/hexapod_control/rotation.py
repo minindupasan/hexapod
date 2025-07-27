@@ -135,12 +135,12 @@ class LegSequencePlayer(Node):
 
         # Joint names matching your URDF
         self.joint_names = {
-            1: ['coxa_1_joint', 'femur_1_joint', 'tibia_1_joint'],
-            2: ['coxa_2_joint', 'femur_2_joint', 'tibia_2_joint'],
-            3: ['coxa_3_joint', 'femur_3_joint', 'tibia_3_joint'],
-            4: ['coxa_4_joint', 'femur_4_joint', 'tibia_4_joint'],
-            5: ['coxa_5_joint', 'femur_5_joint', 'tibia_5_joint'],
-            6: ['coxa_6_joint', 'femur_6_joint', 'tibia_6_joint'],
+            1: ['coxa_joint_1', 'femur_joint_1', 'tibia_joint_1'],
+            2: ['coxa_joint_2', 'femur_joint_2', 'tibia_joint_2'],
+            3: ['coxa_joint_3', 'femur_joint_3', 'tibia_joint_3'],
+            4: ['coxa_joint_4', 'femur_joint_4', 'tibia_joint_4'],
+            5: ['coxa_joint_5', 'femur_joint_5', 'tibia_joint_5'],
+            6: ['coxa_joint_6', 'femur_joint_6', 'tibia_joint_6'],
         }
 
     def send_trajectory_to_all_legs_at_step(self, step_index, duration_sec=0.2):
