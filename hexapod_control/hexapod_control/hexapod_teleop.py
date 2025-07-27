@@ -221,108 +221,104 @@ class HexapodSpiderTeleop(Node):
         """Generate joint angles for a specific step phase."""
         base_angles = self.neutral_angles[leg_num].copy()
         coxa_base, femur_base, tibia_base = base_angles
-        
+
         # Get current movement parameters based on speed
         step_angle, _ = self.get_current_movement_params()
-        
+
         # Get leg mounting angle
         leg_angle = math.radians(self.leg_angles[leg_num])
-        
+
         # Calculate coxa rotation based on direction and leg mounting angle
         coxa_rotation = 0.0
-        
+
+        # --- DIRECTION LOGIC SWAP ---
         if direction == "forward":
-            # FIXED: For forward motion in positive X direction (toward legs 1&4)
-            # Project desired motion onto leg's natural motion direction
-            forward_component = math.cos(leg_angle)
-            coxa_rotation = step_angle * forward_component
-            
-        elif direction == "backward":
-            # Opposite of forward
-            forward_component = math.cos(leg_angle)
-            coxa_rotation = -step_angle * forward_component
-            
-        elif direction == "turn_left":
-            # For left turn, all legs should create counter-clockwise rotation
-            # Tangential component for rotation
-            tangent_component = 1.0 if leg_num in [1, 2, 3] else -1.0
-            coxa_rotation = step_angle * 0.8 * tangent_component
-            
-        elif direction == "turn_right":
-            # For right turn, all legs should create clockwise rotation
+            # Now forward moves in the direction of previous 'turn right' (i.e., rotate coxa for all legs as in turn right)
             tangent_component = -1.0 if leg_num in [1, 2, 3] else 1.0
             coxa_rotation = step_angle * 0.8 * tangent_component
-            
+
+        elif direction == "backward":
+            # Opposite of new forward
+            tangent_component = 1.0 if leg_num in [1, 2, 3] else -1.0
+            coxa_rotation = step_angle * 0.8 * tangent_component
+
+        elif direction == "turn_left":
+            # True rotation: left turn = counterclockwise
+            # All legs rotate coxa in + direction
+            coxa_rotation = step_angle * 1.0
+
+        elif direction == "turn_right":
+            # True rotation: right turn = clockwise
+            # All legs rotate coxa in - direction
+            coxa_rotation = -step_angle * 1.0
+
         elif direction == "forward_left":
-            # Combine forward and left turn components
-            forward_component = math.cos(leg_angle)
-            tangent_component = 0.5 if leg_num in [1, 2, 3] else -0.5
-            coxa_rotation = step_angle * (0.7 * forward_component + 0.3 * tangent_component)
-                
+            # Diagonal: blend new forward and left
+            tangent_component = -1.0 if leg_num in [1, 2, 3] else 1.0
+            coxa_rotation = step_angle * (0.7 * tangent_component + 0.3 * 1.0)
+
         elif direction == "forward_right":
-            # Combine forward and right turn components
-            forward_component = math.cos(leg_angle)
-            tangent_component = -0.5 if leg_num in [1, 2, 3] else 0.5
-            coxa_rotation = step_angle * (0.7 * forward_component + 0.3 * tangent_component)
+            # Diagonal: blend new forward and right
+            tangent_component = -1.0 if leg_num in [1, 2, 3] else 1.0
+            coxa_rotation = step_angle * (0.7 * tangent_component - 0.3 * 1.0)
 
         # Use smooth trajectory for step motion
         if self.use_smooth_transitions:
             coxa_angle = self.smooth_trajectory(coxa_base, coxa_base + coxa_rotation, 
                                               step_phase, total_phases)
         else:
-            # Original linear interpolation
             if total_phases > 1:
                 phase_ratio = step_phase / (total_phases - 1)
                 smooth_ratio = phase_ratio * phase_ratio * (3.0 - 2.0 * phase_ratio)
             else:
                 smooth_ratio = 1.0
             coxa_angle = coxa_base + coxa_rotation * smooth_ratio
-        
+
         # Apply joint limits
         coxa_angle = self.clamp_joint_angle(coxa_angle, 'coxa')
-        
+
         return [coxa_angle, femur_base, tibia_base]
 
     def generate_lift_angles(self, leg_num, lift_phase, total_phases):
-        """Generate joint angles for lifting leg during swing phase with smooth motion."""
+        """Generate joint angles for lifting leg during swing phase with smooth motion (improved tibia smoothness)."""
         base_angles = self.neutral_angles[leg_num].copy()
         coxa_base, femur_base, tibia_base = base_angles
-        
+
         # Create smooth lift trajectory using sine wave for natural motion
         if total_phases > 1:
             phase_ratio = lift_phase / (total_phases - 1)
         else:
             phase_ratio = 1.0
-        
+
         # Use sine wave for smooth lifting and lowering
         lift_factor = math.sin(phase_ratio * math.pi)
-        
+        lift_factor = max(0.0, min(1.0, lift_factor))  # Clamp for safety
+
         # Apply smoothing factor to reduce jerkiness
         lift_factor *= self.transition_smoothness
-        
-        # Smooth trajectories for femur and tibia
+
+        # Improved: Use cosine interpolation for both femur and tibia, but for tibia, blend more gently
         if self.use_smooth_transitions:
-            # Use cosine interpolation for even smoother motion
             femur_target = femur_base + self.lift_femur_offset
             tibia_target = tibia_base + self.lift_tibia_offset
-            
-            femur_angle = self.smooth_trajectory(femur_base, femur_target, 
-                                               lift_phase, total_phases)
-            tibia_angle = self.smooth_trajectory(tibia_base, tibia_target, 
-                                               lift_phase, total_phases)
-            
+
+            femur_angle = self.smooth_trajectory(femur_base, femur_target, lift_phase, total_phases)
+            # For tibia, use a double-smooth blend to avoid glitches
+            tibia_mid = (tibia_base + tibia_target) / 2
+            tibia_angle = self.smooth_trajectory(tibia_base, tibia_mid, lift_phase, total_phases)
+            tibia_angle = self.smooth_trajectory(tibia_angle, tibia_target, int(lift_phase/2), int(total_phases/2) if total_phases>2 else 1)
+
             # Apply lift factor for arc motion
             femur_angle = femur_base + (femur_angle - femur_base) * lift_factor
             tibia_angle = tibia_base + (tibia_angle - tibia_base) * lift_factor
         else:
-            # Original method
             femur_angle = femur_base + self.lift_femur_offset * lift_factor
             tibia_angle = tibia_base + self.lift_tibia_offset * lift_factor
-        
+
         # Apply joint limits
         femur_angle = self.clamp_joint_angle(femur_angle, 'femur')
         tibia_angle = self.clamp_joint_angle(tibia_angle, 'tibia')
-        
+
         return [coxa_base, femur_angle, tibia_angle]
 
     def execute_tripod_gait_step(self, direction):
