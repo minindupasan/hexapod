@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+Gazebo-Specific Configuration File for Hexapod Robot
+
+This file contains all direct Gazebo references and configurations for the hexapod robot,
+including main physics parameters (friction, contact dynamics, material properties).
+
+Key components:
+- Physics parameters for collision surfaces and contact dynamics
+- Material properties for realistic simulation behavior  
+- Contact sensors for ground detection feedback
+-->
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="hexapod_gazebo">
+
+  <!-- GAZEBO PHYSICS PARAMETERS FOR STANDARD LINKS                     -->
+
+  <xacro:macro name="Link" params="reference">
+    <gazebo reference="${reference}">
+        <collision>
+            <surface>
+                <friction>
+                    <ode>
+                        <!-- Main physics parameters: moderate friction for internal components -->
+                        <mu>0.6</mu>
+                        <mu2>0.6</mu2>
+                    </ode>
+                </friction>
+                <contact>
+                    <ode>
+                        <!-- Contact dynamics parameters for stable simulation -->
+                        <kp>1000.0</kp>
+                        <kd>10.0</kd>
+                        <min_depth>0.001</min_depth>
+                        <max_vel>0.1</max_vel>
+                    </ode>
+                </contact>
+            </surface>
+        </collision>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- GAZEBO REFERENCES FOR ALL ROBOT LINKS                            -->
+
+  <!-- Main physics parameters applied to platform -->
+  <xacro:Link reference="base_link"/>
+  
+  <!-- Leg 1 links with physics parameters -->
+  <xacro:Link reference="coxa_1_link"/>
+  <xacro:Link reference="femur_1_link"/>
+  <xacro:Link reference="tibia_1_link"/>
+
+  <!-- Leg 2 links with physics parameters -->
+  <xacro:Link reference="coxa_2_link"/>
+  <xacro:Link reference="femur_2_link"/>
+  <xacro:Link reference="tibia_2_link"/>
+
+  <!-- Leg 3 links with physics parameters -->
+  <xacro:Link reference="coxa_3_link"/>
+  <xacro:Link reference="femur_3_link"/>
+  <xacro:Link reference="tibia_3_link"/>
+
+  <!-- Leg 4 links with physics parameters -->
+  <xacro:Link reference="coxa_4_link"/>
+  <xacro:Link reference="femur_4_link"/>
+  <xacro:Link reference="tibia_4_link"/>
+  
+  <!-- Leg 5 links with physics parameters -->
+  <xacro:Link reference="coxa_5_link"/>
+  <xacro:Link reference="femur_5_link"/>
+  <xacro:Link reference="tibia_5_link"/>
+
+  <!-- Leg 6 links with physics parameters -->
+  <xacro:Link reference="coxa_6_link"/>
+  <xacro:Link reference="femur_6_link"/>
+  <xacro:Link reference="tibia_6_link"/>
+
+  </xacro:macro>
+
+</robot>

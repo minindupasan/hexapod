@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+Main Entry Point for Hexapod Robot URDF Configuration
+
+Unified entry point for different deployment scenarios:
+- Gazebo simulation: use_gazebo=true
+- Real ESP32 hardware: use_fake_hardware=false
+- Algorithm testing: use_fake_hardware=true
+-->
+
+<robot name="hexapod" xmlns:xacro="http://ros.org/wiki/xacro">
+    
+    <!-- ARGUMENT DEFINITIONS                                              -->
+    
+    <!-- Hardware interface selection -->
+    <xacro:arg name="use_gazebo" default="false" />
+    <xacro:arg name="use_fake_hardware" default="false" />
+    
+    <!-- Include main hexapod definition -->
+    <xacro:include filename="$(find hexapod_model_description)/urdf/hexapod_ee.urdf.xacro" />
+    
+    <!-- Create complete hexapod robot with all components -->
+    <xacro:hexapod_ee 
+        use_sim="true" 
+        use_gazebo="$(arg use_gazebo)" 
+        use_fake_hardware="$(arg use_fake_hardware)"
+    />
+</robot>
