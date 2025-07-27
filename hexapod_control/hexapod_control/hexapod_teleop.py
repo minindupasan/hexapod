@@ -16,7 +16,7 @@ import math
 class HexapodSpiderTeleop(Node):
     def __init__(self):
         super().__init__('hexapod_spider_teleop')
-        self.get_logger().info('Initializing Hexapod Spider Gait Controller...')
+        self.get_logger().info('Initializing Spider Hexapod Controller...')
 
         # Publishers for each leg controller
         self.trajectory_publishers = {
@@ -38,56 +38,75 @@ class HexapodSpiderTeleop(Node):
             6: ['coxa_joint_6', 'femur_joint_6', 'tibia_joint_6'],
         }
 
-        # Physical robot parameters (from your original code)
-        self.l1 = 0.05811  # Coxa length: 0.17995 - 0.12184
-        self.l2 = 0.1208   # Femur length: 0.30075 - 0.17995  
-        self.l3 = 0.209    # Tibia length: 0.50975 - 0.30075
+        # Physical robot parameters
+        self.l1 = 0.05811  # Coxa length
+        self.l2 = 0.1208   # Femur length  
+        self.l3 = 0.209    # Tibia length
 
-        # Initial joint positions from your YAML (radians)
-        self.initial_angles = {
-            1: [0.0, 0, -1.7],
-            2: [0.0, 0, -1.7],
-            3: [0.0, 0, -1.7],
-            4: [0.0, 0, -1.7],
-            5: [0.0, 0, -1.7],
-            6: [0.0, 0, -1.7]
+        # Initial stance angles from YAML configuration
+        self.neutral_angles = {
+            1: [0.0, 0.4, -1.7],   # coxa, femur, tibia
+            2: [0.0, 0.4, -1.7],
+            3: [0.0, 0.4, -1.7],
+            4: [0.0, 0.4, -1.7],
+            5: [0.0, 0.4, -1.7],
+            6: [0.0, 0.4, -1.7]
         }
 
-        # Leg base positions relative to body center (hexagon layout)
-        self.leg_base_positions = {
-            1: [0.12184, -0.12184 * math.tan(math.pi/6), 0],    # Front-right (30°)
-            2: [0.0, -0.12184, 0],                              # Middle-right (90°)
-            3: [-0.12184, -0.12184 * math.tan(math.pi/6), 0],  # Rear-right (150°)
-            4: [-0.12184, 0.12184 * math.tan(math.pi/6), 0],   # Rear-left (210°)
-            5: [0.0, 0.12184, 0],                               # Middle-left (270°)
-            6: [0.12184, 0.12184 * math.tan(math.pi/6), 0]     # Front-left (330°)
-        }
-
-        # Calculate neutral foot positions using forward kinematics
-        self.neutral_positions = {}
+        # Current joint angles (will be updated during movement)
+        self.current_angles = {}
         for leg in range(1, 7):
-            pos = self.forward_kinematics(self.initial_angles[leg], leg)
-            self.neutral_positions[leg] = pos
-            self.get_logger().info(f'Leg {leg} neutral position: {pos}')
+            self.current_angles[leg] = self.neutral_angles[leg].copy()
 
-        # Spider gait parameters
-        self.step_length = 0.1        # Step distance (increased for more movement)
-        self.step_height = 0.08        # Lift height during swing
-        self.cycle_time = 1.2          # Total cycle time (slower for stability)
-        self.duty_factor = 0.6         # Fraction of cycle in stance
-        self.points_per_cycle = 30     # Trajectory resolution
+        # Joint limits (from URDF)
+        self.joint_limits = {
+            'coxa': [-1.5708, 1.5708],    # ±90°
+            'femur': [-1.5708, 1.5708],   # ±90° 
+            'tibia': [-2.35619, 0.0]      # -135° to 0°
+        }
+
+        # Spider body dimensions and stance
+        self.body_height = 0.08    # Target body height above ground
         
-        # Movement parameters for better coxa engagement
-        self.stride_multiplier = 1.5   # Multiply step length for better reach
+        # Spider leg base positions (relative to body center)
+        self.leg_base_positions = {
+            # LEFT SIDE legs (positive Y)
+            1: np.array([0.08, 0.12, 0.014]),    # Front-left
+            2: np.array([0.0, 0.14, 0.014]),     # Middle-left  
+            3: np.array([-0.08, 0.12, 0.014]),   # Back-left
+            
+            # RIGHT SIDE legs (negative Y)  
+            4: np.array([0.08, -0.12, 0.014]),   # Front-right
+            5: np.array([0.0, -0.14, 0.014]),    # Middle-right
+            6: np.array([-0.08, -0.12, 0.014])   # Back-right
+        }
+
+        # Leg mounting angles (angle from body centerline to leg)
+        # These determine the natural direction each leg should step
+        self.leg_angles = {
+            1: 60.0,   # Front-left: 60° from forward
+            2: 90.0,   # Middle-left: 90° from forward (pure sideways)
+            3: 120.0,  # Back-left: 120° from forward
+            4: -60.0,  # Front-right: -60° from forward
+            5: -90.0,  # Middle-right: -90° from forward (pure sideways)
+            6: -120.0  # Back-right: -120° from forward
+        }
+
+        # Movement parameters
+        self.step_height = 0.1        # Foot lift height during swing
+        self.step_angle = 0.8          # Coxa rotation for each step (radians)
+        self.lift_femur_offset = 0.2   # Femur adjustment for lifting
+        self.lift_tibia_offset = 0.3   # Tibia adjustment for lifting
+        self.cycle_time = 2.0          # Time for complete gait cycle
+        self.points_per_phase = 10     # Trajectory points per phase
         
-        # Tripod groups (classic spider gait)
-        self.tripod_1 = [1, 3, 5]  # Right-front, Right-rear, Left-middle
-        self.tripod_2 = [2, 4, 6]  # Right-middle, Left-rear, Left-front
+        # Spider gait: alternating tripods
+        self.tripod_1 = [1, 3, 5]  # Left-front, Left-back, Right-middle
+        self.tripod_2 = [2, 4, 6]  # Left-middle, Right-front, Right-back
         
         # Movement state
         self.is_moving = False
         self.movement_thread = None
-        self.current_phase = 0
         
         # Terminal setup
         self.old_attr = termios.tcgetattr(sys.stdin)
@@ -97,274 +116,198 @@ class HexapodSpiderTeleop(Node):
 
     def print_instructions(self):
         instructions = """
-        ╔══════════════════════════════════════════════════════════════╗
-        ║                 HEXAPOD SPIDER GAIT CONTROLLER               ║
-        ╠══════════════════════════════════════════════════════════════╣
-        ║ Movement Controls:                                           ║
-        ║   w/W : Walk forward with spider gait                       ║
-        ║   s/S : Walk backward with spider gait                      ║
-        ║   a/A : Turn left (rotate body)                             ║
-        ║   d/D : Turn right (rotate body)                            ║
-        ║   q/Q : Walk forward-left diagonal                          ║
-        ║   e/E : Walk forward-right diagonal                         ║
-        ║                                                              ║
-        ║ Control Commands:                                            ║
-        ║   x/X : Stop movement and return to neutral                 ║
-        ║   r/R : Reset to initial standing position                  ║
-        ║   SPACE : Emergency stop                                     ║
-        ║   ESC/Ctrl+C : Exit program                                  ║
-        ║                                                              ║
-        ║ Spider Gait: Alternating tripod pattern (3 legs at a time)  ║
-        ╚══════════════════════════════════════════════════════════════╝
+        ╔═══════════════════════════════════════════════════════════════╗
+        ║                SPIDER HEXAPOD LOCOMOTION CONTROLLER           ║
+        ║              (Joint-Based Tripod Gait Control)                ║
+        ╠═══════════════════════════════════════════════════════════════╣
+        ║ Spider Layout:                                                ║
+        ║   LEFT:  1(front) - 2(middle) - 3(back)                       ║
+        ║   RIGHT: 4(front) - 5(middle) - 6(back)                       ║
+        ║                                                               ║
+        ║ Movement Controls:                                            ║
+        ║   w/W : Walk forward (spider tripod gait)                     ║
+        ║   s/S : Walk backward (spider tripod gait)                    ║
+        ║   a/A : Turn left (body rotation)                             ║
+        ║   d/D : Turn right (body rotation)                            ║
+        ║   q/Q : Diagonal forward-left                                 ║
+        ║   e/E : Diagonal forward-right                                ║
+        ║                                                               ║
+        ║ Control Commands:                                             ║
+        ║   x/X : Stop movement                                         ║
+        ║   r/R : Reset to neutral stance                               ║
+        ║   SPACE : Emergency stop                                      ║
+        ║   ESC/Ctrl+C : Exit program                                   ║
+        ║                                                               ║
+        ║ Status: Ready for joint-based gait control                    ║
+        ╚═══════════════════════════════════════════════════════════════╝
         
-        Ready for commands...
+        Spider ready to walk...
         """
         print(instructions)
 
-    def forward_kinematics(self, joint_angles, leg_num):
-        """Calculate foot position from joint angles in global coordinates."""
-        alpha1, alpha2, alpha3 = joint_angles
-        
-        # Local leg coordinates
-        x_local = self.l1 + self.l2 * math.cos(alpha2) + self.l3 * math.cos(alpha2 + alpha3)
-        y_local = 0
-        z_local = -self.l2 * math.sin(alpha2) - self.l3 * math.sin(alpha2 + alpha3)
-        
-        # Rotate by coxa angle
-        x_rotated = x_local * math.cos(alpha1) - y_local * math.sin(alpha1)
-        y_rotated = x_local * math.sin(alpha1) + y_local * math.cos(alpha1)
-        
-        # Transform to global coordinates
-        base_pos = self.leg_base_positions[leg_num]
-        global_x = base_pos[0] + x_rotated
-        global_y = base_pos[1] + y_rotated  
-        global_z = base_pos[2] + z_local
-        
-        return np.array([global_x, global_y, global_z])
+    def clamp_joint_angle(self, angle, joint_type):
+        """Clamp joint angle within limits."""
+        limits = self.joint_limits[joint_type]
+        return max(limits[0], min(limits[1], angle))
 
-    def inverse_kinematics(self, target_pos, leg_num):
-        """Calculate joint angles from target foot position."""
-        # Transform to leg base coordinates
-        base_pos = self.leg_base_positions[leg_num]
-        local_x = target_pos[0] - base_pos[0]
-        local_y = target_pos[1] - base_pos[1]
-        local_z = target_pos[2] - base_pos[2]
+    def generate_step_angles(self, leg_num, direction, step_phase, total_phases):
+        """Generate joint angles for a specific step phase."""
+        base_angles = self.neutral_angles[leg_num].copy()
+        coxa_base, femur_base, tibia_base = base_angles
         
-        # Coxa angle (horizontal rotation) - this is crucial for movement!
-        alpha1 = math.atan2(local_y, local_x)
+        # Get leg mounting angle
+        leg_angle = math.radians(self.leg_angles[leg_num])
         
-        # Distance from coxa joint axis to target (in horizontal plane)
-        horizontal_distance = math.sqrt(local_x**2 + local_y**2)
+        # Calculate coxa rotation based on direction and leg mounting angle
+        coxa_rotation = 0.0
         
-        # Distance from coxa end to target
-        r = horizontal_distance - self.l1
-        h = -local_z  # Height (positive up)
-        
-        # Distance from femur joint to foot
-        d = math.sqrt(r**2 + h**2)
-        
-        # Check if target is reachable
-        max_reach = self.l2 + self.l3
-        min_reach = abs(self.l2 - self.l3)
-        
-        if d > max_reach:
-            # Scale down if too far
-            scale = max_reach * 0.95 / d
-            r *= scale
-            h *= scale
-            d = math.sqrt(r**2 + h**2)
-            self.get_logger().debug(f'Leg {leg_num}: Scaled target to reachable distance')
-        elif d < min_reach:
-            # Scale up if too close  
-            scale = min_reach * 1.05 / d
-            r *= scale
-            h *= scale
-            d = math.sqrt(r**2 + h**2)
+        if direction == "forward":
+            # For forward motion, each leg needs to step in the direction that
+            # contributes to forward body movement based on its mounting angle
+            forward_component = math.cos(leg_angle)  # How much this leg contributes to forward motion
+            coxa_rotation = self.step_angle * forward_component
             
-        # Knee angle (using law of cosines)
-        cos_alpha3 = (self.l2**2 + self.l3**2 - d**2) / (2 * self.l2 * self.l3)
-        cos_alpha3 = max(-1, min(1, cos_alpha3))  # Clamp to valid range
-        alpha3 = -math.acos(cos_alpha3)  # Negative for knee bend
-        
-        # Hip angle
-        angle1 = math.atan2(h, r) if r != 0 else 0
-        angle2 = math.acos((self.l2**2 + d**2 - self.l3**2) / (2 * self.l2 * d)) if d != 0 else 0
-        alpha2 = angle1 + angle2
-        
-        return [alpha1, alpha2, alpha3]
+        elif direction == "backward":
+            # Opposite of forward
+            forward_component = math.cos(leg_angle)
+            coxa_rotation = -self.step_angle * forward_component
+            
+        elif direction == "turn_left":
+            # For turning, all legs rotate in same direction relative to their mounting
+            coxa_rotation = self.step_angle * 0.6
+            
+        elif direction == "turn_right":
+            coxa_rotation = -self.step_angle * 0.6
+            
+        elif direction == "forward_left":
+            # Combine forward and left turn components
+            forward_component = math.cos(leg_angle)
+            side_component = math.sin(leg_angle)
+            coxa_rotation = self.step_angle * (0.7 * forward_component + 0.3 * side_component)
+                
+        elif direction == "forward_right":
+            # Combine forward and right turn components
+            forward_component = math.cos(leg_angle)
+            side_component = math.sin(leg_angle)
+            coxa_rotation = self.step_angle * (0.7 * forward_component - 0.3 * side_component)
 
-    def generate_step_trajectory(self, start_pos, end_pos, is_swing_phase, num_points):
-        """Generate trajectory for one step."""
-        trajectory = []
+        # Apply step phase (smooth transition)
+        phase_ratio = step_phase / (total_phases - 1)
+        smooth_ratio = 0.5 * (1 - math.cos(phase_ratio * math.pi))  # Smooth S-curve
         
-        if is_swing_phase:
-            # Swing phase: lift foot and move through air
-            for i in range(num_points):
-                t = i / (num_points - 1)
-                
-                # Linear interpolation in X and Y
-                x = start_pos[0] + t * (end_pos[0] - start_pos[0])
-                y = start_pos[1] + t * (end_pos[1] - start_pos[1])
-                
-                # Parabolic arc in Z (lift foot)
-                z_base = start_pos[2] + t * (end_pos[2] - start_pos[2])
-                z_lift = self.step_height * 4 * t * (1 - t)  # Parabola
-                z = z_base + z_lift
-                
-                trajectory.append(np.array([x, y, z]))
-        else:
-            # Stance phase: keep foot on ground, move body over foot
-            for i in range(num_points):
-                t = i / (num_points - 1)
-                x = start_pos[0] + t * (end_pos[0] - start_pos[0])
-                y = start_pos[1] + t * (end_pos[1] - start_pos[1])
-                z = start_pos[2] + t * (end_pos[2] - start_pos[2])
-                trajectory.append(np.array([x, y, z]))
-                
-        return trajectory
+        coxa_angle = coxa_base + coxa_rotation * smooth_ratio
+        
+        # Apply joint limits
+        coxa_angle = self.clamp_joint_angle(coxa_angle, 'coxa')
+        
+        return [coxa_angle, femur_base, tibia_base]
 
-    def execute_spider_gait(self, direction_vector):
-        """Execute continuous spider gait in given direction."""
+    def generate_lift_angles(self, leg_num, lift_phase, total_phases):
+        """Generate joint angles for lifting leg during swing phase."""
+        base_angles = self.neutral_angles[leg_num].copy()
+        coxa_base, femur_base, tibia_base = base_angles
+        
+        # Create smooth lift trajectory
+        phase_ratio = lift_phase / (total_phases - 1)
+        
+        # Use sine wave for smooth lift and lower
+        lift_factor = math.sin(phase_ratio * math.pi)
+        
+        # Adjust femur and tibia for lifting
+        femur_angle = femur_base + self.lift_femur_offset * lift_factor
+        tibia_angle = tibia_base + self.lift_tibia_offset * lift_factor
+        
+        # Apply joint limits
+        femur_angle = self.clamp_joint_angle(femur_angle, 'femur')
+        tibia_angle = self.clamp_joint_angle(tibia_angle, 'tibia')
+        
+        return [coxa_base, femur_angle, tibia_angle]
+
+    def execute_tripod_gait_step(self, direction):
+        """Execute one complete tripod gait cycle."""
+        phase_duration = self.cycle_time / (2 * self.points_per_phase)  # Time per trajectory point
+        
+        self.get_logger().info(f'Executing tripod gait: {direction}')
+        
+        # Phase 1: Tripod 1 swings, Tripod 2 supports
+        self.get_logger().debug(f'Phase 1: Tripod 1 ({self.tripod_1}) swings, Tripod 2 ({self.tripod_2}) supports')
+        for phase in range(self.points_per_phase):
+            if not self.is_moving:
+                return
+                
+            for leg in range(1, 7):
+                if leg in self.tripod_1:
+                    # Swing phase: lift and step
+                    if phase < self.points_per_phase // 2:
+                        # First half: lift
+                        angles = self.generate_lift_angles(leg, phase, self.points_per_phase // 2)
+                        if phase == 0:  # Debug first step
+                            self.get_logger().debug(f'Leg {leg} lifting: {[round(a, 3) for a in angles]}')
+                    else:
+                        # Second half: step forward and lower
+                        step_phase = phase - self.points_per_phase // 2
+                        lift_angles = self.generate_lift_angles(leg, 
+                                                              self.points_per_phase // 2 - step_phase - 1, 
+                                                              self.points_per_phase // 2)
+                        step_angles = self.generate_step_angles(leg, direction, step_phase, 
+                                                              self.points_per_phase // 2)
+                        # Combine lift and step
+                        angles = [step_angles[0], lift_angles[1], lift_angles[2]]
+                        if step_phase == 0:  # Debug first step
+                            leg_angle_deg = self.leg_angles[leg]
+                            self.get_logger().debug(f'Leg {leg} (angle {leg_angle_deg}°) stepping: {[round(a, 3) for a in angles]}')
+                else:
+                    # Stance phase: support body (maintain neutral)
+                    angles = self.neutral_angles[leg].copy()
+                
+                self.send_joint_command(leg, angles, phase_duration)
+            
+            time.sleep(phase_duration)
+        
+        # Phase 2: Tripod 2 swings, Tripod 1 supports
+        self.get_logger().debug(f'Phase 2: Tripod 2 ({self.tripod_2}) swings, Tripod 1 ({self.tripod_1}) supports')
+        for phase in range(self.points_per_phase):
+            if not self.is_moving:
+                return
+                
+            for leg in range(1, 7):
+                if leg in self.tripod_2:
+                    # Swing phase: lift and step
+                    if phase < self.points_per_phase // 2:
+                        # First half: lift
+                        angles = self.generate_lift_angles(leg, phase, self.points_per_phase // 2)
+                        if phase == 0:  # Debug first step
+                            self.get_logger().debug(f'Leg {leg} lifting: {[round(a, 3) for a in angles]}')
+                    else:
+                        # Second half: step forward and lower
+                        step_phase = phase - self.points_per_phase // 2
+                        lift_angles = self.generate_lift_angles(leg, 
+                                                              self.points_per_phase // 2 - step_phase - 1, 
+                                                              self.points_per_phase // 2)
+                        step_angles = self.generate_step_angles(leg, direction, step_phase, 
+                                                              self.points_per_phase // 2)
+                        # Combine lift and step
+                        angles = [step_angles[0], lift_angles[1], lift_angles[2]]
+                        if step_phase == 0:  # Debug first step
+                            leg_angle_deg = self.leg_angles[leg]
+                            self.get_logger().debug(f'Leg {leg} (angle {leg_angle_deg}°) stepping: {[round(a, 3) for a in angles]}')
+                else:
+                    # Stance phase: support body (maintain neutral)
+                    angles = self.neutral_angles[leg].copy()
+                
+                self.send_joint_command(leg, angles, phase_duration)
+            
+            time.sleep(phase_duration)
+
+    def execute_continuous_gait(self, direction):
+        """Execute continuous tripod gait."""
         self.is_moving = True
         
-        # Scale direction vector for better coxa movement
-        scaled_direction = direction_vector * self.stride_multiplier
-        
-        # Calculate step parameters
-        swing_points = int(self.points_per_cycle * (1 - self.duty_factor))
-        stance_points = int(self.points_per_cycle * self.duty_factor) 
-        step_time = self.cycle_time / self.points_per_cycle
-        
-        phase = 0  # 0 = tripod_1 swings, 1 = tripod_2 swings
-        
-        self.get_logger().info(f'Starting gait with direction: {scaled_direction}')
-        
         while self.is_moving:
-            # Generate trajectories for current phase
-            leg_trajectories = {}
-            
-            for leg in range(1, 7):
-                neutral_pos = self.neutral_positions[leg]
-                
-                # Determine if this leg is in swing or stance phase
-                in_tripod_1 = leg in self.tripod_1
-                is_swing = (phase == 0 and in_tripod_1) or (phase == 1 and not in_tripod_1)
-                
-                if is_swing:
-                    # Swing phase: move from rear to front position
-                    # Start from a position behind neutral
-                    start_pos = neutral_pos - scaled_direction * 0.6
-                    # End at a position ahead of neutral  
-                    end_pos = neutral_pos + scaled_direction * 0.6
-                    trajectory = self.generate_step_trajectory(start_pos, end_pos, True, swing_points)
-                    self.get_logger().debug(f'Leg {leg} SWING: {start_pos} -> {end_pos}')
-                else:
-                    # Stance phase: move from front to rear position (ground contact)
-                    # Start from ahead of neutral
-                    start_pos = neutral_pos + scaled_direction * 0.6
-                    # End behind neutral
-                    end_pos = neutral_pos - scaled_direction * 0.6  
-                    trajectory = self.generate_step_trajectory(start_pos, end_pos, False, stance_points)
-                    self.get_logger().debug(f'Leg {leg} STANCE: {start_pos} -> {end_pos}')
-                
-                leg_trajectories[leg] = trajectory
-            
-            # Execute trajectories synchronously
-            max_points = max(len(leg_trajectories[leg]) for leg in range(1, 7))
-            
-            for step_idx in range(max_points):
-                if not self.is_moving:
-                    return
-                
-                # Send commands to all legs for this time step
-                for leg in range(1, 7):
-                    if step_idx < len(leg_trajectories[leg]):
-                        target_pos = leg_trajectories[leg][step_idx]
-                        joint_angles = self.inverse_kinematics(target_pos, leg)
-                        
-                        if joint_angles is not None:
-                            # Log coxa movement for debugging
-                            if step_idx % 10 == 0:  # Log every 10th step
-                                self.get_logger().debug(f'Leg {leg} coxa angle: {math.degrees(joint_angles[0]):.1f}°')
-                            self.send_joint_command(leg, joint_angles, step_time)
-                        else:
-                            self.get_logger().warn(f'IK failed for leg {leg} at step {step_idx}')
-                
-                time.sleep(step_time)
-            
-            # Switch to other tripod
-            phase = 1 - phase
-            self.get_logger().debug(f'Switching to phase {phase}')
-
-    def execute_turn_gait(self, angular_velocity):
-        """Execute turning gait with proper coxa movement."""
-        self.is_moving = True
-        
-        swing_points = int(self.points_per_cycle * (1 - self.duty_factor))
-        stance_points = int(self.points_per_cycle * self.duty_factor)
-        step_time = self.cycle_time / self.points_per_cycle
-        
-        phase = 0
-        
-        # Calculate turn step size
-        turn_step = angular_velocity * 0.15  # Increased turn step
-        
-        while self.is_moving:
-            leg_trajectories = {}
-            
-            for leg in range(1, 7):
-                neutral_pos = self.neutral_positions[leg]
-                base_pos = np.array(self.leg_base_positions[leg])
-                
-                # Calculate tangential movement for rotation around body center
-                radius_vector = base_pos[:2]  # Vector from center to leg base
-                radius = np.linalg.norm(radius_vector)
-                
-                if radius > 0:
-                    # Perpendicular vector for rotation (tangent)
-                    tangent_unit = np.array([-radius_vector[1], radius_vector[0]]) / radius
-                    # Scale by radius and turn rate
-                    turn_vector = np.array([tangent_unit[0] * turn_step * radius, 
-                                          tangent_unit[1] * turn_step * radius, 0])
-                else:
-                    turn_vector = np.array([0, 0, 0])
-                
-                in_tripod_1 = leg in self.tripod_1
-                is_swing = (phase == 0 and in_tripod_1) or (phase == 1 and not in_tripod_1)
-                
-                if is_swing:
-                    start_pos = neutral_pos - turn_vector * 0.8
-                    end_pos = neutral_pos + turn_vector * 0.8
-                    trajectory = self.generate_step_trajectory(start_pos, end_pos, True, swing_points)
-                    self.get_logger().debug(f'Turn leg {leg} SWING: vector={turn_vector}')
-                else:
-                    start_pos = neutral_pos + turn_vector * 0.8
-                    end_pos = neutral_pos - turn_vector * 0.8
-                    trajectory = self.generate_step_trajectory(start_pos, end_pos, False, stance_points)
-                
-                leg_trajectories[leg] = trajectory
-            
-            # Execute trajectories synchronously
-            max_points = max(len(leg_trajectories[leg]) for leg in range(1, 7))
-            
-            for step_idx in range(max_points):
-                if not self.is_moving:
-                    return
-                
-                for leg in range(1, 7):
-                    if step_idx < len(leg_trajectories[leg]):
-                        target_pos = leg_trajectories[leg][step_idx]
-                        joint_angles = self.inverse_kinematics(target_pos, leg)
-                        
-                        if joint_angles is not None:
-                            self.send_joint_command(leg, joint_angles, step_time)
-                
-                time.sleep(step_time)
-            
-            phase = 1 - phase
+            self.execute_tripod_gait_step(direction)
 
     def send_joint_command(self, leg_num, joint_angles, duration_sec):
-        """Send joint command to specific leg."""
+        """Send joint trajectory command."""
         duration = Duration()
         duration.sec = int(duration_sec)
         duration.nanosec = int((duration_sec - int(duration_sec)) * 1e9)
@@ -380,10 +323,13 @@ class HexapodSpiderTeleop(Node):
         
         traj_msg.points.append(point)
         self.trajectory_publishers[leg_num].publish(traj_msg)
+        
+        # Update current angles
+        self.current_angles[leg_num] = joint_angles.copy()
 
-    def reset_to_initial_pose(self):
-        """Reset robot to initial standing pose."""
-        self.get_logger().info('Resetting to initial pose...')
+    def reset_to_neutral_stance(self):
+        """Move to neutral spider stance."""
+        self.get_logger().info('Moving to neutral spider stance...')
         self.is_moving = False
         
         duration = Duration()
@@ -395,26 +341,29 @@ class HexapodSpiderTeleop(Node):
             traj_msg.joint_names = self.joint_names[leg_num]
             
             point = JointTrajectoryPoint()
-            point.positions = list(map(float, self.initial_angles[leg_num]))
+            point.positions = list(map(float, self.neutral_angles[leg_num]))
             point.velocities = [0.0] * 3
             point.accelerations = [0.0] * 3
             point.time_from_start = duration
             
             traj_msg.points.append(point)
             self.trajectory_publishers[leg_num].publish(traj_msg)
+            
+            # Update current angles
+            self.current_angles[leg_num] = self.neutral_angles[leg_num].copy()
         
-        time.sleep(2.0)
+        time.sleep(2.5)
 
     def emergency_stop(self):
         """Stop all movement immediately."""
-        self.get_logger().warn('EMERGENCY STOP!')
+        self.get_logger().warn('SPIDER EMERGENCY STOP!')
         self.is_moving = False
         if self.movement_thread and self.movement_thread.is_alive():
             self.movement_thread.join(timeout=1.0)
 
     def get_key(self):
-        """Non-blocking keyboard input."""
-        if select.select([sys.stdin], [], [], 0.1) == ([sys.stdin], [], []):
+        """Get keyboard input without blocking."""
+        if select.select([sys.stdin], [], [], 0.05) == ([sys.stdin], [], []):
             return sys.stdin.read(1)
         return None
 
@@ -423,86 +372,82 @@ class HexapodSpiderTeleop(Node):
         if key is None:
             return True
 
-        key = key.lower()
+        key_lower = key.lower()
         
-        # Stop any current movement
+        # Stop current movement
         if self.is_moving:
             self.emergency_stop()
             time.sleep(0.2)
 
-        if key == 'w':  # Forward
-            self.get_logger().info('Walking forward...')
-            direction = np.array([self.step_length, 0, 0])
-            self.movement_thread = threading.Thread(target=self.execute_spider_gait, args=(direction,))
+        if key_lower == 'w':  # Forward
+            self.get_logger().info('Spider walking forward...')
+            self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("forward",))
             self.movement_thread.start()
             
-        elif key == 's':  # Backward  
-            self.get_logger().info('Walking backward...')
-            direction = np.array([-self.step_length, 0, 0])
-            self.movement_thread = threading.Thread(target=self.execute_spider_gait, args=(direction,))
+        elif key_lower == 's':  # Backward
+            self.get_logger().info('Spider walking backward...')
+            self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("backward",))
             self.movement_thread.start()
             
-        elif key == 'a':  # Turn left
-            self.get_logger().info('Turning left...')
-            self.movement_thread = threading.Thread(target=self.execute_turn_gait, args=(-1.0,))
+        elif key_lower == 'a':  # Turn left
+            self.get_logger().info('Spider turning left...')
+            self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("turn_left",))
             self.movement_thread.start()
             
-        elif key == 'd':  # Turn right
-            self.get_logger().info('Turning right...')
-            self.movement_thread = threading.Thread(target=self.execute_turn_gait, args=(1.0,))
+        elif key_lower == 'd':  # Turn right
+            self.get_logger().info('Spider turning right...')
+            self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("turn_right",))
             self.movement_thread.start()
             
-        elif key == 'q':  # Forward-left diagonal
-            self.get_logger().info('Walking forward-left...')
-            direction = np.array([self.step_length*0.7, self.step_length*0.7, 0])
-            self.movement_thread = threading.Thread(target=self.execute_spider_gait, args=(direction,))
+        elif key_lower == 'q':  # Forward-left
+            self.get_logger().info('Spider walking forward-left...')
+            self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("forward_left",))
             self.movement_thread.start()
             
-        elif key == 'e':  # Forward-right diagonal
-            self.get_logger().info('Walking forward-right...')
-            direction = np.array([self.step_length*0.7, -self.step_length*0.7, 0])
-            self.movement_thread = threading.Thread(target=self.execute_spider_gait, args=(direction,))
+        elif key_lower == 'e':  # Forward-right
+            self.get_logger().info('Spider walking forward-right...')
+            self.movement_thread = threading.Thread(target=self.execute_continuous_gait, args=("forward_right",))
             self.movement_thread.start()
             
-        elif key == 'x':  # Stop and reset
-            self.get_logger().info('Stopping movement...')
+        elif key_lower == 'x':  # Stop
+            self.get_logger().info('Stopping spider...')
             self.emergency_stop()
             
-        elif key == 'r':  # Reset pose
-            self.get_logger().info('Resetting pose...')
+        elif key_lower == 'r':  # Reset stance
+            self.get_logger().info('Resetting to neutral stance...')
             self.emergency_stop()
-            threading.Thread(target=self.reset_to_initial_pose).start()
+            threading.Thread(target=self.reset_to_neutral_stance).start()
             
         elif key == ' ':  # Emergency stop
             self.emergency_stop()
             
         elif key == '\x1b' or ord(key) == 3:  # ESC or Ctrl+C
-            self.get_logger().info('Exiting...')
+            self.get_logger().info('Exiting spider controller...')
             return False
             
         else:
-            if ord(key) > 31:  # Printable character
-                self.get_logger().info(f'Unknown command: "{key}" - See instructions above')
+            if ord(key) > 31:
+                self.get_logger().info(f'Unknown command: "{key}"')
 
         return True
 
     def run(self):
         """Main control loop."""
         try:
-            # Initialize to standing pose
-            self.reset_to_initial_pose()
+            # Move to neutral stance first
+            self.reset_to_neutral_stance()
             
-            self.get_logger().info('Spider gait controller ready! Use WASD for movement.')
+            self.get_logger().info('Spider controller ready! Use WASD for movement.')
             
             while rclpy.ok():
                 key = self.get_key()
                 if not self.process_key(key):
                     break
                     
-                time.sleep(0.01)  # Small delay to prevent CPU overload
+                time.sleep(0.01)
                 
         except KeyboardInterrupt:
-            self.get_logger().info('Keyboard interrupt received')
+            self.get_logger().info('Keyboard interrupt')
         finally:
             self.cleanup()
 
@@ -510,16 +455,16 @@ class HexapodSpiderTeleop(Node):
         """Clean up resources."""
         self.emergency_stop()
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_attr)
-        self.get_logger().info('Hexapod controller shutdown complete')
+        self.get_logger().info('Spider controller shutdown complete')
 
 def main(args=None):
     rclpy.init(args=args)
     
     try:
-        teleop = HexapodSpiderTeleop()
-        teleop.run()
+        spider_teleop = HexapodSpiderTeleop()
+        spider_teleop.run()
     except Exception as e:
-        print(f'Error: {e}')
+        print(f'Spider Controller Error: {e}')
     finally:
         if rclpy.ok():
             rclpy.shutdown()

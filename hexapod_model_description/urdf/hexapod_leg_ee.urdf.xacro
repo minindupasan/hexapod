@@ -22,10 +22,10 @@ Structure:
     <!-- ========================================== -->
     
     <!-- Mass properties for each component -->
-    <xacro:property name="base_mass" value="1.6209524349173943" />
-    <xacro:property name="coxa_mass" value="0.36752045333400934" />
-    <xacro:property name="femur_mass" value="1.2425883897057017" />
-    <xacro:property name="tibia_mass" value="0.6509579807539126" />    
+    <xacro:property name="base_mass" value="0.05" />
+    <xacro:property name="coxa_mass" value="0.05" />
+    <xacro:property name="femur_mass" value="0.05" />
+    <xacro:property name="tibia_mass" value="0.05" />
 
     <!-- Joint angle limits (radians) -->
     <xacro:property name="coxa_joint_lower" value="-1.5708"/>  <!-- ±45° -->
