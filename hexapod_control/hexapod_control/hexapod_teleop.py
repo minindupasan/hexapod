@@ -94,12 +94,12 @@ class HexapodSpiderTeleop(Node):
         }
 
         # Movement parameters
-        self.step_height = 1        # Foot lift height during swing
-        self.base_step_angle = 0.15     # Base coxa rotation for each step (radians)
-        self.lift_femur_offset = 0.25   # Femur adjustment for smooth lifting
-        self.lift_tibia_offset = 0.35   # Tibia adjustment for smooth lifting
-        self.base_cycle_time = 1.5      # Base time for complete gait cycle
-        self.points_per_phase = 20      # More trajectory points for smoothness
+        self.step_height = 5        # Foot lift height during swing (default 1)
+        self.base_step_angle = 2     # Base coxa rotation for each step (radians) 
+        self.lift_femur_offset = 0.25   # Femur adjustment for smooth lifting (default 0.25 radians)
+        self.lift_tibia_offset = 0.35   # Tibia adjustment for smooth lifting (default 0.35 radians)
+        self.base_cycle_time = 1.5      # Base time for complete gait cycle (default 1.5 seconds)
+        self.points_per_phase = 40      # More trajectory points for smoothness (default 20)
         
         # Extended speed control with more profiles
         self.speed_levels = {
@@ -109,7 +109,9 @@ class HexapodSpiderTeleop(Node):
             'fast': 1.5,       # 150% speed
             'turbo': 2.0,      # 200% speed
             'sprint': 2.5,     # 250% speed
-            'max': 3.0         # 300% speed - maximum
+            'blitz': 3.0,      # 300% speed
+            'hyper': 5.0,      # 500% speed
+            'max': 20.0         # 2000% speed - maximum
         }
         self.current_speed = 'normal'
         self.speed_multiplier = self.speed_levels[self.current_speed]
@@ -139,13 +141,13 @@ class HexapodSpiderTeleop(Node):
         ║              (Joint-Based Tripod Gait Control)                ║
         ╠═══════════════════════════════════════════════════════════════╣
         ║ Spider Layout (Forward = toward legs 1&4):                    ║
-        ║            Forward ↑                                       ║
-        ║       ┌─────────────────┐                                  ║
-        ║  Left │ 1           4   │ Right                            ║
-        ║       │ 2           5   │                                  ║  
-        ║       │ 3           6   │                                  ║
-        ║       └─────────────────┘                                  ║
-        ║            Backward ↓                                      ║
+        ║            Forward ↑                                          ║
+        ║       ┌─────────────────┐                                     ║
+        ║  Left │ 1           4   │ Right                               ║
+        ║       │ 2           5   │                                     ║  
+        ║       │ 3           6   │                                     ║
+        ║       └─────────────────┘                                     ║
+        ║            Backward ↓                                         ║
         ║                                                               ║
         ║ Movement Controls:                                            ║
         ║   w/W : Walk forward (spider tripod gait)                     ║
@@ -162,7 +164,9 @@ class HexapodSpiderTeleop(Node):
         ║   4 : Fast speed (150%)                                       ║
         ║   5 : Turbo speed (200%)                                      ║
         ║   6 : Sprint speed (250%)                                     ║
-        ║   7 : Max speed (300%)                                        ║
+        ║   7 : Blitz speed (300%)                                      ║
+        ║   8 : Hyper speed (500%)                                      ║
+        ║   9 : Max speed (1000%)                                       ║
         ║                                                               ║
         ║ Control Commands:                                             ║
         ║   x/X : Stop movement                                         ║
@@ -171,7 +175,7 @@ class HexapodSpiderTeleop(Node):
         ║   ESC/Ctrl+C : Exit program                                   ║
         ║                                                               ║
         ║ Status: Ready for joint-based gait control                    ║
-        ║ Current Speed: {:<8} ({:>3}%)                              ║
+        ║ Current Speed: {:<8} ({:>3}%)                                 ║
         ╚═══════════════════════════════════════════════════════════════╝
         
         Spider ready to walk...
@@ -554,8 +558,14 @@ class HexapodSpiderTeleop(Node):
             
         elif key == '6':  # Sprint speed
             self.set_speed('sprint')
-            
-        elif key == '7':  # Max speed
+        
+        elif key == '7':  # Blitz speed
+            self.set_speed('blitz')
+
+        elif key == '8':  # Hyper speed
+            self.set_speed('hyper')
+
+        elif key == '9':  # Max speed
             self.set_speed('max')
             
         elif key_lower == 'x':  # Stop

@@ -95,7 +95,7 @@
 
       <!-- Ramp with proper inertial properties -->
       <link name="ramp">
-        <pose>0 1.2 0.1 0.3 0 0</pose>
+        <pose>0 1.2 0.1 0.1 0 0</pose>
         
         <!-- Added inertial properties -->
         <inertial>
