@@ -18,12 +18,12 @@ import xacro
 
 def generate_launch_description():
     # Pobieranie ścieżek do pakietów
-    hexapod_description_path = get_package_share_directory('hexapod_model_description')
+    hexapod_model_description_path = get_package_share_directory('hexapod_model_description')
     hex_gz_path = get_package_share_directory('hexapod_gz')
     
     # Argumenty uruchomieniowe
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    world = LaunchConfiguration('world', default='empty_ode')
+    world = LaunchConfiguration('world', default='empty')
     
     # Deklaracja argumentów
     declare_use_sim_time = DeclareLaunchArgument(
@@ -34,34 +34,33 @@ def generate_launch_description():
     
     declare_world = DeclareLaunchArgument(
         'world',
-        default_value='empty_ode',  # Now consistent
+        default_value='empty_ode',
         description='Gazebo World file name'
-    )   
+    )
     
     # Ustawienie ścieżki zasobów dla Gazebo
     gazebo_resource_path = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
         value=[
             os.path.join(hex_gz_path, 'worlds'),
-            ':' + str(Path(hexapod_description_path).parent.resolve()),
+            ':' + str(Path(hexapod_model_description_path).parent.resolve()),
         ],
     )
 
-    # Fixed Gazebo launch
+    # Uruchomienie Gazebo
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch'),
             '/gz_sim.launch.py',
         ]),
         launch_arguments=[
-            ('gz_args', ['-r -v 4 ', world, '.sdf']),  # Fixed format
-            ('on_exit_shutdown', 'true'),  # Prevent auto-close
+            ('gz_args', [world, '.sdf', ' -v 4', ' -r']),
         ],
     )
 
     # Przetwarzanie pliku XACRO
     xacro_file = os.path.join(
-        hexapod_description_path,
+        hexapod_model_description_path,
         'urdf',
         'hexapod.urdf.xacro',
     )
@@ -87,13 +86,13 @@ def generate_launch_description():
         executable='parameter_bridge',
         arguments=[
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-            # '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
-            # '/world/empty/model/hexapod/link/link4_1/sensor/sensor_contact_1/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            # '/world/empty/model/hexapod/link/link4_2/sensor/sensor_contact_2/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            # '/world/empty/model/hexapod/link/link4_3/sensor/sensor_contact_3/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            # '/world/empty/model/hexapod/link/link4_4/sensor/sensor_contact_4/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            # '/world/empty/model/hexapod/link/link4_5/sensor/sensor_contact_5/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
-            # '/world/empty/model/hexapod/link/link4_6/sensor/sensor_contact_6/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            '/world/empty/model/hexapod/link/link4_1/sensor/sensor_contact_1/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            '/world/empty/model/hexapod/link/link4_2/sensor/sensor_contact_2/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            '/world/empty/model/hexapod/link/link4_3/sensor/sensor_contact_3/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            '/world/empty/model/hexapod/link/link4_4/sensor/sensor_contact_4/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            '/world/empty/model/hexapod/link/link4_5/sensor/sensor_contact_5/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
+            '/world/empty/model/hexapod/link/link4_6/sensor/sensor_contact_6/contact@ros_gz_interfaces/msg/Contacts[gz.msgs.Contacts',
         ],
         output='screen',
     )

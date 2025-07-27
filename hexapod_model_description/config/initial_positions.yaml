@@ -1,21 +1,21 @@
 # Default initial positions for hexapod's ros2_control configuration.
 
 initial_positions:
-  joint1_1: 0.0
-  joint1_2: 0.0
-  joint1_3: 0.0
-  joint1_4: 0.0
-  joint1_5: 0.0
-  joint1_6: 0.0
-  joint2_1: 0.0
-  joint2_2: 0.0
-  joint2_3: 0.0
-  joint2_4: 0.0
-  joint2_5: 0.0
-  joint2_6: 0.0
-  joint3_1: 0.0
-  joint3_2: 0.0
-  joint3_3: 0.0
-  joint3_4: 0.0
-  joint3_5: 0.0
-  joint3_6: 0.0
+  coxa_joint_1: 0.0
+  femur_joint_1: 0.0
+  tibia_joint_1: 0.0
+  coxa_joint_2: 0.0
+  femur_joint_2: 0.0
+  tibia_joint_2: 0.0
+  coxa_joint_3: 0.0
+  femur_joint_3: 0.0
+  tibia_joint_3: 0.0
+  coxa_joint_4: 0.0
+  femur_joint_4: 0.0
+  tibia_joint_4: 0.0
+  coxa_joint_5: 0.0
+  femur_joint_5: 0.0
+  tibia_joint_5: 0.0
+  coxa_joint_6: 0.0
+  femur_joint_6: 0.0
+  tibia_joint_6: 0.0
