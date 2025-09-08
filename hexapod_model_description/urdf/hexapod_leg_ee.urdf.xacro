@@ -400,8 +400,8 @@ Structure:
           <geometry>
             <mesh filename="file://$(find hexapod_model_description)/meshes/${prefix}_link.stl" scale="0.001 0.001 0.001"/>
           </geometry>
-          <material name="gray">
-            <color rgba="0.2 0.2 0.2 1"/>
+          <material name="black">
+            <color rgba="0.1 0.1 0.1 1"/>
           </material>
         </visual>
         <!-- Collision model using simplified shapes -->
@@ -427,9 +427,16 @@ Structure:
           <geometry>
             <mesh filename="file://$(find hexapod_model_description)/meshes/${prefix}_${index}_link.stl" scale="0.001 0.001 0.001"/>
           </geometry>
-          <material name="grey">
-            <color rgba="${rgba}"/>
-          </material>
+          <xacro:if value="${prefix == 'femur'}">
+            <material name="orange">
+              <color rgba="1.0 0.4 0.0 1"/>
+            </material>
+          </xacro:if>
+          <xacro:unless value="${prefix == 'femur'}">
+            <material name="black">
+              <color rgba="0.1 0.1 0.1 1"/>
+            </material>
+          </xacro:unless>
         </visual>
         <collision>
           <origin xyz="${c_xyz}" rpy="${c_rpy}"/>
@@ -465,7 +472,7 @@ Structure:
       <!-- Create base base -->
       <xacro:base 
       prefix="base"
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${base_mass}"
       c_xyz="${base_c_xyz}"
       c_rpy="${base_c_rpy}"
@@ -490,7 +497,7 @@ Structure:
       v_rpy="${coxa_1_v_rpy}" 
       i_xyz="${coxa_1_i_xyz}" 
       i_rpy="${coxa_1_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${coxa_mass}"
       ixx="${coxa_1_ixx}"
       ixy="${coxa_1_ixy}"
@@ -518,7 +525,7 @@ Structure:
       v_rpy="${femur_1_v_rpy}" 
       i_xyz="${femur_1_i_xyz}" 
       i_rpy="${femur_1_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="1.0 0.4 0.0 1"
       mass="${femur_mass}"
       ixx="${femur_1_ixx}"
       ixy="${femur_1_ixy}"
@@ -546,7 +553,7 @@ Structure:
       v_rpy="${tibia_1_v_rpy}" 
       i_xyz="${tibia_1_i_xyz}" 
       i_rpy="${tibia_1_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${tibia_mass}"
       ixx="${tibia_1_ixx}"
       ixy="${tibia_1_ixy}"
@@ -576,7 +583,7 @@ Structure:
       v_rpy="${coxa_2_v_rpy}" 
       i_xyz="${coxa_2_i_xyz}" 
       i_rpy="${coxa_2_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${coxa_mass}"
       ixx="${coxa_2_ixx}"
       ixy="${coxa_2_ixy}"
@@ -604,7 +611,7 @@ Structure:
       v_rpy="${femur_2_v_rpy}" 
       i_xyz="${femur_2_i_xyz}" 
       i_rpy="${femur_2_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="1.0 0.4 0.0 1"
       mass="${femur_mass}"
       ixx="${femur_2_ixx}"
       ixy="${femur_2_ixy}"
@@ -632,7 +639,7 @@ Structure:
       v_rpy="${tibia_2_v_rpy}" 
       i_xyz="${tibia_2_i_xyz}" 
       i_rpy="${tibia_2_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${tibia_mass}"
       ixx="${tibia_2_ixx}"
       ixy="${tibia_2_ixy}"
@@ -662,7 +669,7 @@ Structure:
       v_rpy="${coxa_3_v_rpy}" 
       i_xyz="${coxa_3_i_xyz}" 
       i_rpy="${coxa_3_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${coxa_mass}"
       ixx="${coxa_3_ixx}"
       ixy="${coxa_3_ixy}"
@@ -690,7 +697,7 @@ Structure:
       v_rpy="${femur_3_v_rpy}" 
       i_xyz="${femur_3_i_xyz}" 
       i_rpy="${femur_3_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="1.0 0.4 0.0 1"
       mass="${femur_mass}"
       ixx="${femur_3_ixx}"
       ixy="${femur_3_ixy}"
@@ -718,7 +725,7 @@ Structure:
       v_rpy="${tibia_3_v_rpy}" 
       i_xyz="${tibia_3_i_xyz}" 
       i_rpy="${tibia_3_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${tibia_mass}"
       ixx="${tibia_3_ixx}"
       ixy="${tibia_3_ixy}"
@@ -748,7 +755,7 @@ Structure:
       v_rpy="${coxa_4_v_rpy}" 
       i_xyz="${coxa_4_i_xyz}" 
       i_rpy="${coxa_4_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${coxa_mass}"
       ixx="${coxa_4_ixx}"
       ixy="${coxa_4_ixy}"
@@ -776,7 +783,7 @@ Structure:
       v_rpy="${femur_4_v_rpy}" 
       i_xyz="${femur_4_i_xyz}" 
       i_rpy="${femur_4_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="1.0 0.4 0.0 1"
       mass="${femur_mass}"
       ixx="${femur_4_ixx}"
       ixy="${femur_4_ixy}"
@@ -804,7 +811,7 @@ Structure:
       v_rpy="${tibia_4_v_rpy}" 
       i_xyz="${tibia_4_i_xyz}" 
       i_rpy="${tibia_4_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${tibia_mass}"
       ixx="${tibia_4_ixx}"
       ixy="${tibia_4_ixy}"
@@ -834,7 +841,7 @@ Structure:
       v_rpy="${coxa_5_v_rpy}" 
       i_xyz="${coxa_5_i_xyz}" 
       i_rpy="${coxa_5_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${coxa_mass}"
       ixx="${coxa_5_ixx}"
       ixy="${coxa_5_ixy}"
@@ -862,7 +869,7 @@ Structure:
       v_rpy="${femur_5_v_rpy}" 
       i_xyz="${femur_5_i_xyz}" 
       i_rpy="${femur_5_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="1.0 0.4 0.0 1"
       mass="${femur_mass}"
       ixx="${femur_5_ixx}"
       ixy="${femur_5_ixy}"
@@ -890,7 +897,7 @@ Structure:
       v_rpy="${tibia_5_v_rpy}" 
       i_xyz="${tibia_5_i_xyz}" 
       i_rpy="${tibia_5_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${tibia_mass}"
       ixx="${tibia_5_ixx}"
       ixy="${tibia_5_ixy}"
@@ -920,7 +927,7 @@ Structure:
       v_rpy="${coxa_6_v_rpy}" 
       i_xyz="${coxa_6_i_xyz}" 
       i_rpy="${coxa_6_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${coxa_mass}"
       ixx="${coxa_6_ixx}"
       ixy="${coxa_6_ixy}"
@@ -948,7 +955,7 @@ Structure:
       v_rpy="${femur_6_v_rpy}" 
       i_xyz="${femur_6_i_xyz}" 
       i_rpy="${femur_6_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="1.0 0.4 0.0 1"
       mass="${femur_mass}"
       ixx="${femur_6_ixx}"
       ixy="${femur_6_ixy}"
@@ -976,7 +983,7 @@ Structure:
       v_rpy="${tibia_6_v_rpy}" 
       i_xyz="${tibia_6_i_xyz}" 
       i_rpy="${tibia_6_i_rpy}" 
-      rgba="0.2 0.2 0.2 1"
+      rgba="0.1 0.1 0.1 1"
       mass="${tibia_mass}"
       ixx="${tibia_6_ixx}"
       ixy="${tibia_6_ixy}"

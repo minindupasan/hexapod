@@ -2,20 +2,20 @@
 
 initial_positions:
   coxa_joint_1: 0.0
-  femur_joint_1: 0.4
-  tibia_joint_1: -1.7
+  femur_joint_1: 0.7
+  tibia_joint_1: -1.8
   coxa_joint_2: 0.0
-  femur_joint_2: 0.4
-  tibia_joint_2: -1.7
+  femur_joint_2: 0.7
+  tibia_joint_2: -1.8
   coxa_joint_3: 0.0
-  femur_joint_3: 0.4
-  tibia_joint_3: -1.7
+  femur_joint_3: 0.7
+  tibia_joint_3: -1.8
   coxa_joint_4: 0.0
-  femur_joint_4: 0.4
-  tibia_joint_4: -1.7
+  femur_joint_4: 0.7
+  tibia_joint_4: -1.8
   coxa_joint_5: 0.0
-  femur_joint_5: 0.4
-  tibia_joint_5: -1.7
+  femur_joint_5: 0.7
+  tibia_joint_5: -1.8
   coxa_joint_6: 0.0
-  femur_joint_6: 0.4
-  tibia_joint_6: -1.7
+  femur_joint_6: 0.7
+  tibia_joint_6: -1.8
