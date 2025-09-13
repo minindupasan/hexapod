@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <robot name="hexapod_model" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find hexapod_model_description)/urdf/materials.xacro" />
-  <xacro:include filename="$(find hexapod_model_description)/urdf/hexapod_model.ros2_control.xacro" />
-  <xacro:include filename="$(find hexapod_model_description)/urdf/hexapod.gazebo.xacro" />
+  <xacro:include filename="$(find hexapod_model_description)/control/hexapod.ros2_control.xacro" />
+  <xacro:include filename="$(find hexapod_model_description)/gazebo/hexapod.gazebo.xacro" />
   <link name="base_link">
     <inertial>
       <origin xyz="-0.026500000000020115 0.1853149788824598 0.005671016395165651" rpy="0 0 0"/>
@@ -529,7 +529,7 @@
   </joint>
 
   <!-- Apply Gazebo configurations -->
-  <xacro:hexapod_gazebo prefix=""/>
+  <xacro:hexapod_gazebo/>
 
   <!-- Add ros2_control configuration -->
   <xacro:hexapod_ros2_control name="GazeboSystem" initial_positions_file=""/>
