@@ -72,7 +72,7 @@ This project contains a comprehensive ROS2 package suite for simulating and cont
 - ✅ World files and environments
 - ✅ Launch file configurations
 - ✅ RViz integration
-- ✅ SLAM capabilities
+- 🚧 SLAM capabilities (planned)
 
 </td>
 <td>
@@ -81,11 +81,11 @@ This project contains a comprehensive ROS2 package suite for simulating and cont
 
 **Path Planning & SLAM**
 
-- ✅ Navigation stack integration
-- ✅ SLAM toolbox configuration
-- ✅ Path planning algorithms
-- ✅ Obstacle avoidance
-- ✅ Autonomous navigation
+- 🚧 Navigation stack integration (planned)
+- 🚧 SLAM toolbox configuration (planned)
+- 🚧 Path planning algorithms (planned)
+- 🚧 Obstacle avoidance (planned)
+- 🚧 Autonomous navigation (planned)
 
 </td>
 </tr>
