@@ -123,9 +123,9 @@ sudo apt install ros-jazzy-desktop
 sudo apt install python3-colcon-common-extensions python3-rosdep python3-pip
 
 # Install additional dependencies
-sudo apt install ros-jazzy-gazebo-ros-pkgs ros-jazzy-ros-gz ros-jazzy-xacro
+sudo apt install ros-jazzy-ros-gz ros-jazzy-xacro
 sudo apt install ros-jazzy-robot-state-publisher ros-jazzy-joint-state-publisher
-sudo apt install ros-jazzy-rviz2 ros-jazzy-slam-toolbox
+sudo apt install ros-jazzy-rviz2
 ```
 
 #### 3. **Initialize rosdep**
@@ -204,8 +204,8 @@ Start the complete simulation environment:
 # Launch Gazebo simulation with robot
 ros2 launch hexapod_gz complete.launch.py
 
-# Launch with specific options
-ros2 launch hexapod_gz complete.launch.py use_slam:=true use_rviz:=true
+# Launch with RViz visualization
+ros2 launch hexapod_gz complete.launch.py use_rviz:=true
 ```
 
 ### 🚶 Walking Controller
@@ -309,9 +309,9 @@ hexapod/
 │   ├── 📁 worlds/                   # Gazebo world files
 │   ├── 📁 launch/                   # Simulation launch files
 │   └── 📁 rviz/                     # RViz configurations
-└── 📁 hexapod_navigation/           # Navigation & SLAM
-    ├── 📁 config/                   # Navigation configs
-    └── 📁 launch/                   # Navigation launch files
+└── 📁 hexapod_navigation/           # Navigation & SLAM (planned)
+    ├── 📁 config/                   # Navigation configs (planned)
+    └── 📁 launch/                   # Navigation launch files (planned)
 ```
 
 ### 🧪 Testing
@@ -378,7 +378,8 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 ### Gazebo Issues
 
-> [!WARNING] > **Problem**: Robot not appearing in Gazebo
+> [!WARNING]
+> **Problem**: Robot not appearing in Gazebo
 >
 > **Solution**:
 >
@@ -387,8 +388,26 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 > ros2 topic echo /robot_description
 >
 > # Restart Gazebo
-> killall gzserver gzclient
+> killall gz
 > ros2 launch hexapod_gz complete.launch.py
+> ```
+
+### Graphics Issues
+
+> [!WARNING]
+> **Problem**: Gazebo crashes or doesn't start
+>
+> **Solution**:
+>
+> ```bash
+> # Check graphics drivers
+> glxinfo | grep "OpenGL version"
+> 
+> # For Intel/AMD graphics, install Mesa drivers
+> sudo apt install mesa-utils
+> 
+> # For NVIDIA, ensure proper drivers are installed
+> nvidia-smi
 > ```
 
 ### Transform Errors in RViz
